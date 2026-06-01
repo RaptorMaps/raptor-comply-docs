@@ -2,10 +2,19 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Raptor Comply",
   "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/images/logo/logo.svg",
+    "dark": "/images/logo/logo.svg",
+    "href": "https://raptorcomply.com"
+  },
   "colors": {
-    "primary": "#0E7C66",
-    "light": "#0E7C66",
-    "dark": "#0A5A4B"
+    "primary": "#0A1C32",
+    "light": "#8AA5FF",
+    "dark": "#26395D",
+    "anchors": {
+      "from": "#0A1C32",
+      "to": "#F68B37"
+    }
   },
   "topbarLinks": [
     {
@@ -22,6 +31,10 @@
     {
       "group": "Get Started",
       "pages": ["introduction", "authentication", "quickstart"]
+    },
+    {
+      "group": "Reference",
+      "pages": ["endpoints"]
     }
   ],
   "footerSocials": {
