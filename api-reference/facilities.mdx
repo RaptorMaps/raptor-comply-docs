@@ -8,7 +8,7 @@ description: "Use GET /facilities and GET /facilities/{id} to list and retrieve 
 Facilities are the top-level structural objects in your Raptor Comply tenant. Each facility corresponds to a NERC-registered site — such as a substation, generating plant, or transmission station — that you've already classified inside the platform. Use these endpoints to read your facility inventory and integrate it into downstream tooling like CMDBs and asset management systems.
 
 <Note>
-  Every request to the Raptor Comply API requires two headers: **X-API-Key** (your API key) and **Organization** (your organization slug). See [Authentication](/authentication) for setup instructions.
+  Every request to the Raptor Comply API requires the **X-API-Key** header. See [Authentication](/authentication) for setup instructions.
 </Note>
 
 ***
@@ -28,8 +28,7 @@ No path or query parameters are required. Include your authentication headers on
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/facilities \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -42,10 +41,6 @@ Returns `200 OK` with a JSON array of facility objects.
 
 <ResponseField name="name" type="string">
   Human-readable name of the facility as configured in Raptor Comply.
-</ResponseField>
-
-<ResponseField name="organization_slug" type="string">
-  The slug of the organization that owns this facility. Matches the value you pass in the `Organization` header.
 </ResponseField>
 
 ```json theme={null}
@@ -77,8 +72,7 @@ Returns a single facility by its unique identifier. Use this endpoint when you n
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/facilities/fac_01HXY... \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -91,10 +85,6 @@ Returns `200 OK` with a single facility object.
 
 <ResponseField name="name" type="string">
   Human-readable name of the facility.
-</ResponseField>
-
-<ResponseField name="organization_slug" type="string">
-  The slug of the organization that owns this facility.
 </ResponseField>
 
 ```json theme={null}

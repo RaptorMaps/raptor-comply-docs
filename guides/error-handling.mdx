@@ -88,7 +88,6 @@ const response = await fetchWithRetry(
   {
     headers: {
       "X-API-Key": process.env.RAPTOR_COMPLY_API_KEY,
-      "Organization": process.env.RAPTOR_COMPLY_ORG_SLUG,
     },
   }
 );
@@ -105,7 +104,6 @@ Always check the response status before consuming the body. Here are patterns in
 const response = await fetch("https://api.raptormaps.com/cyber-assets", {
   headers: {
     "X-API-Key": process.env.RAPTOR_COMPLY_API_KEY,
-    "Organization": process.env.RAPTOR_COMPLY_ORG_SLUG,
   },
 });
 
@@ -129,7 +127,6 @@ response = requests.get(
     "https://api.raptormaps.com/cyber-assets",
     headers={
         "X-API-Key": os.environ["RAPTOR_COMPLY_API_KEY"],
-        "Organization": os.environ["RAPTOR_COMPLY_ORG_SLUG"],
     },
 )
 

@@ -8,7 +8,7 @@ description: "Use GET /cyber-systems and GET /cyber-systems/{id} to read your BE
 BES Cyber Systems (BCS) are the logical groupings of cyber assets that perform or support a reliable operation of the Bulk Electric System. In Raptor Comply, each cyber system is scoped to a facility or control center and carries an impact rating (High, Medium, or Low) that drives your CIP requirements. Use these endpoints to read your cyber system inventory and link it to asset management or SIEM workflows.
 
 <Note>
-  Every request to the Raptor Comply API requires two headers: **X-API-Key** (your API key) and **Organization** (your organization slug). See [Authentication](/authentication) for setup instructions.
+  Every request to the Raptor Comply API requires the **X-API-Key** header. See [Authentication](/authentication) for setup instructions.
 </Note>
 
 ***
@@ -28,8 +28,7 @@ No path or query parameters are required. Include your authentication headers on
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/cyber-systems \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -82,8 +81,7 @@ Returns a single BES Cyber System by its unique identifier. Use this endpoint to
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/cyber-systems/cs_01DEF... \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response

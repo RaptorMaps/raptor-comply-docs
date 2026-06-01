@@ -23,8 +23,7 @@ Retrieve all cyber assets in your organization with `GET /cyber-assets`:
 
 ```bash theme={null}
 curl https://api.raptormaps.com/cyber-assets \
-  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
 ```
 
 A successful response returns a JSON array of all cyber assets your API key has access to:
@@ -56,8 +55,7 @@ To retrieve one specific asset, pass its `id` to `GET /cyber-assets/{id}`:
 
 ```bash theme={null}
 curl https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
-  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
 ```
 
 The response returns a single JSON object for that asset. If the `id` does not exist in your organization, the API returns a `404 Not Found`.
@@ -69,7 +67,6 @@ Use `POST /cyber-assets` to add a new asset to your compliance inventory. The re
 ```bash theme={null}
 curl -X POST https://api.raptormaps.com/cyber-assets \
   -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "RTU-PLANT-01",
@@ -102,7 +99,6 @@ For example, to rename an asset:
 ```bash theme={null}
 curl -X PATCH https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
   -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "RTU-PLANT-01-REVISED"
@@ -117,8 +113,7 @@ Use `DELETE /cyber-assets/{id}` to permanently remove a decommissioned asset fro
 
 ```bash theme={null}
 curl -X DELETE https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
-  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
 ```
 
 A successful delete returns `204 No Content` with no response body.
@@ -135,8 +130,7 @@ A successful delete returns `204 No Content` with no response body.
 
     ```bash theme={null}
     curl https://api.raptormaps.com/cyber-systems \
-      -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-      -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+      -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
     ```
 
     Find the cyber system you want to classify the new asset under and copy its `id` (format: `cs_01...`).
@@ -148,7 +142,6 @@ A successful delete returns `204 No Content` with no response body.
     ```bash theme={null}
     curl -X POST https://api.raptormaps.com/cyber-assets \
       -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-      -H "Organization: $RAPTOR_COMPLY_ORG_SLUG" \
       -H "Content-Type: application/json" \
       -d '{
         "name": "RTU-PLANT-01",
@@ -167,8 +160,7 @@ A successful delete returns `204 No Content` with no response body.
 
     ```bash theme={null}
     curl https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
-      -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-      -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+      -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
     ```
 
     A `200 OK` response with the asset object confirms the record is live in your compliance inventory.

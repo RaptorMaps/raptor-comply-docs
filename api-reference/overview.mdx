@@ -1,9 +1,9 @@
 ---
 title: "Raptor Comply REST API Overview and Reference Guide"
-description: "Access NERC OT compliance data with the Raptor Comply REST API. All requests use HTTPS, return JSON, and require X-API-Key and Organization headers."
+description: "Access NERC OT compliance data with the Raptor Comply REST API. All requests use HTTPS, return JSON, and require an X-API-Key header."
 ---
 
-> Access NERC OT compliance data with the Raptor Comply REST API. All requests use HTTPS, return JSON, and require X-API-Key and Organization headers.
+> Access NERC OT compliance data with the Raptor Comply REST API. All requests use HTTPS, return JSON, and require an X-API-Key header.
 
 The Raptor Comply REST API gives you programmatic access to your NERC OT compliance data — facilities, control centers, cyber systems, cyber assets, and more. Every request travels over HTTPS to the base URL `https://api.raptormaps.com` and every response is returned as JSON. There is no separate XML, CSV, or binary transport layer; if you need a CSV export, use the Raptor Comply web application.
 
@@ -22,9 +22,8 @@ Every request requires two headers:
 | Header         | What to send                                                          |
 | -------------- | --------------------------------------------------------------------- |
 | `X-API-Key`    | Your API key, generated inside Raptor Comply by an organization admin |
-| `Organization` | Your organization slug, visible in your Raptor Comply tenant URL      |
 
-The API rejects any request that is missing either header. For step-by-step instructions on generating a key and finding your organization slug, see [Authentication](/authentication).
+The API rejects any request that is missing the X-API-Key header. For step-by-step instructions on generating a key, see [Authentication](/authentication).
 
 ## Request format
 
@@ -33,8 +32,7 @@ Send all request bodies as JSON and include the `Content-Type: application/json`
 ```bash theme={null}
 # Example POST with a JSON body
 curl -X POST https://api.raptormaps.com/cyber-assets \
-  -H "X-API-Key: rmcp_xxxxxxxxxxxxxxxxxxxxxxxx" \
-  -H "Organization: your-organization-slug" \
+  -H "X-API-Key: rc_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
   -H "Content-Type: application/json" \
   -d '{"name": "Historian Server 01", "cyberSystemId": "cs_abc123"}'
 ```

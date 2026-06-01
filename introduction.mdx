@@ -9,7 +9,7 @@ description: "Raptor Comply gives GO, GOP, TO, and TOP entities a REST API to ma
 
 <CardGroup cols={2}>
   <Card title="Authentication" icon="key" href="/authentication">
-    Set up your API key and organization slug, understand error responses, and learn key rotation best practices.
+    Set up your API key, understand error responses, and learn key rotation best practices.
   </Card>
 
   <Card title="Quickstart" icon="rocket" href="/quickstart">
@@ -36,7 +36,7 @@ The current API surface focuses on your core NERC CIP inventory objects. Read ac
 | **Cyber Systems**   | Read                         |
 | **Cyber Assets**    | Read, Create, Update, Delete |
 
-All requests go to the base URL `https://api.raptormaps.com` and require the `X-API-Key` and `Organization` headers on every call. See [Authentication](/authentication) for details.
+All requests go to the base URL `https://api.raptormaps.com` and require the `X-API-Key` header on every call. Each API key is bound to a single organization, so the key alone identifies your tenant. See [Authentication](/authentication) for details.
 
 ## Who this is for
 

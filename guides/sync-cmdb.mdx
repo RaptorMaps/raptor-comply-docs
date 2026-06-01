@@ -29,8 +29,7 @@ For most teams, **start with full sync** and move to event-driven if volume or l
 
 ```bash theme={null}
 curl https://api.raptormaps.com/cyber-assets \
-  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
 ```
 
 A successful response returns a JSON array:
@@ -69,7 +68,6 @@ When a new device is commissioned, use `POST /cyber-assets` to add it to Raptor 
 ```bash theme={null}
 curl -X POST https://api.raptormaps.com/cyber-assets \
   -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "RTU-PLANT-01",
@@ -87,7 +85,6 @@ Use `PATCH /cyber-assets/{id}` to update an existing cyber asset. The PATCH meth
 ```bash theme={null}
 curl -X PATCH https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
   -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "RTU-PLANT-01-UPDATED"
@@ -102,8 +99,7 @@ When a device is retired or decommissioned, delete it from Raptor Comply with `D
 
 ```bash theme={null}
 curl -X DELETE https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
-  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
 ```
 
 A successful delete returns an HTTP `204 No Content` response with no body. Deletion is permanent — see [Create, Update, and Delete Cyber Assets](/guides/manage-cyber-assets) for the warning details.
@@ -116,7 +112,6 @@ The script below demonstrates a complete full-sync loop: fetch all cyber assets 
 const BASE_URL = "https://api.raptormaps.com";
 const HEADERS = {
   "X-API-Key": process.env.RAPTOR_COMPLY_API_KEY,
-  "Organization": process.env.RAPTOR_COMPLY_ORG_SLUG,
   "Content-Type": "application/json",
 };
 

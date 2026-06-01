@@ -1,57 +1,29 @@
 ---
 title: "Organizations and Multi-Tenant Access in Raptor Comply"
-description: "Each Raptor Comply account belongs to an organization tenant. Learn how organizations work, how to find your slug, and how multi-organization access works."
+description: "Each Raptor Comply account belongs to an organization tenant. Learn how organizations work and how multi-organization access works."
 ---
 
-> Each Raptor Comply account belongs to an organization tenant. Learn how organizations work, how to find your slug, and how multi-organization access works.
+> Each Raptor Comply account belongs to an organization tenant. Learn how organizations work and how multi-organization access works.
 
-Every Raptor Comply account is scoped to an **organization** — a private tenant that holds all of your compliance data, users, and configuration. When you make an API request, the `Organization` header tells Raptor Comply which tenant you are accessing. Without it, the API rejects your request outright. Understanding how organizations work is essential before you write your first integration.
-
-## Your organization slug
-
-Your organization slug is a short, URL-safe identifier that was set when your tenant was provisioned. It is unique across all Raptor Comply tenants and does not change after initial setup.
-
-You can find your slug in two places:
-
-* **Your Raptor Comply URL** — when you are logged into the application, your browser address bar includes the slug in the path:
-  ```
-  https://app.raptormaps.com/org/your-slug/...
-  ```
-  The segment after `/org/` is your slug.
-
-* **Your admin** — if you are not sure, ask the person who manages your Raptor Comply account. They can confirm the slug or find it in the organization settings.
-
-Pass the slug exactly as it appears in the `Organization` header on every API request:
-
-```bash theme={null}
-curl https://api.raptormaps.com/facilities \
-  -H "X-API-Key: rmcp_xxxxxxxxxxxxxxxxxxxxxxxx" \
-  -H "Organization: your-slug"
-```
-
-<Info>
-  Organization slugs are case-sensitive in the `Organization` header. `Acme-Energy` and `acme-energy` are treated as different values. Always use the slug exactly as it was provisioned.
-</Info>
+Every Raptor Comply account is scoped to an **organization**: a private tenant that holds all of your compliance data, users, and configuration. Each API key is generated inside one organization and binds to that organization for its entire lifetime, so the key itself identifies the tenant on every request. Understanding how organizations work is essential before you write your first integration.
 
 ## Organization scope
 
-All data in Raptor Comply — facilities, control centers, cyber systems, cyber assets, users, policy documents, tasks, evidence, and training records — belongs to a specific organization. An API key issued by one organization cannot read or modify data in any other organization. Even if the same person has accounts in two tenants, requests always resolve against the organization named in the `Organization` header, and the API key must be valid for that tenant.
+All data in Raptor Comply (facilities, control centers, cyber systems, cyber assets, users, policy documents, tasks, evidence, and training records) belongs to a specific organization. An API key issued by one organization cannot read or modify data in any other organization. Even if the same person has accounts in two tenants, the key resolves to exactly one organization, and the API will only return data from that tenant.
 
 This means your integration cannot accidentally leak or merge data across NERC entities. Each organization is a fully isolated data boundary.
 
 ## Multiple organizations
 
-If your company operates multiple NERC-registered entities — or manages compliance for more than one registered entity in separate tenants — you may have access to more than one Raptor Comply organization. Each organization requires its own credentials:
+If your company operates multiple NERC-registered entities, or manages compliance for more than one registered entity in separate tenants, you may have access to more than one Raptor Comply organization. Each organization requires its own API key:
 
-* A separate API key scoped to that tenant
-* The corresponding organization slug in the `Organization` header
+* Generate a separate API key inside each tenant
+* Store and use each key with its own configuration
 
-You cannot use a single API key across multiple tenants. Structure your integration to accept both values (key and slug) as configurable parameters, so you can run separate instances or jobs for each organization you manage.
-
-`GET /users/me/organizations` — which will list all organizations your user account can access — is coming soon. Until then, coordinate with your organization admins to collect the slug and API key for each tenant you need to reach.
+You cannot use a single API key across multiple tenants. Structure your integration to accept the API key as a configurable parameter so you can run separate instances or jobs for each organization you manage.
 
 ## Vendor access
 
-If you are an integration vendor or systems integrator building a connection on behalf of a utility customer, you need API credentials scoped to the **customer's** organization — not your own. Your customer's Organization Admin must generate an API key inside their tenant and share it with you through a secure channel. Raptor Comply does not email keys, so use your standard secrets-sharing process.
+If you are an integration vendor or systems integrator building a connection on behalf of a utility customer, you need an API key scoped to the **customer's** organization, not your own. Your customer's Organization Admin must generate an API key inside their tenant and share it with you through a secure channel. Raptor Comply does not email keys, so use your standard secrets-sharing process.
 
-Once you have the customer's key and slug, treat them like any other organization credentials: store them securely, never commit them to source code, and rotate them if they are exposed.
+Once you have the customer's key, treat it like any other organization credential: store it securely, never commit it to source code, and rotate it if it is exposed.

@@ -8,7 +8,7 @@ description: "Use GET /control-centers and GET /control-centers/{id} to access y
 Control centers represent the operational hubs — such as energy management system (EMS) sites or transmission control rooms — that you've registered in Raptor Comply. They sit alongside facilities in your organizational hierarchy and are used to group and classify BES Cyber Systems for NERC CIP compliance purposes. Use these endpoints to read your control center inventory and integrate it with upstream data sources.
 
 <Note>
-  Every request to the Raptor Comply API requires two headers: **X-API-Key** (your API key) and **Organization** (your organization slug). See [Authentication](/authentication) for setup instructions.
+  Every request to the Raptor Comply API requires the **X-API-Key** header. See [Authentication](/authentication) for setup instructions.
 </Note>
 
 ***
@@ -28,8 +28,7 @@ No path or query parameters are required. Include your authentication headers on
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/control-centers \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -77,8 +76,7 @@ Returns a single control center by its unique identifier. Use this endpoint to l
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/control-centers/cc_01ABC... \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
