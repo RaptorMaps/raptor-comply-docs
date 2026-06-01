@@ -1,0 +1,183 @@
+---
+title: "Sync Your CMDB with Raptor Comply Cyber Assets API"
+description: "Use the Raptor Comply API to keep your CMDB in sync with your NERC-classified cyber assets. Fetch, create, update, and delete assets via REST."
+---
+
+> Use the Raptor Comply API to keep your CMDB in sync with your NERC-classified cyber assets. Fetch, create, update, and delete assets via REST.
+
+Your NERC CIP-classified cyber assets live in Raptor Comply, but your CMDB or ITSM platform needs to reflect the same inventory. Maintaining two systems manually is error-prone and risks compliance gaps when equipment is added, reconfigured, or decommissioned. The Raptor Comply API lets you automate that bridge — programmatically fetching, creating, updating, and deleting cyber assets so your downstream systems always match what's recorded in your compliance tenant.
+
+## Sync strategy overview
+
+Choose the approach that fits how your CMDB and operations team work:
+
+### 1. Full sync
+
+On a schedule (nightly, hourly, or triggered by a pipeline), you fetch every cyber asset from Raptor Comply and reconcile the result against your CMDB. Records present in Raptor Comply but missing from your CMDB get created; records in your CMDB that no longer exist in Raptor Comply get removed or flagged.
+
+Full sync is the simplest pattern to implement and the safest to reason about — every run converges to a known-good state regardless of what happened between runs.
+
+### 2. Event-driven sync
+
+Your integration listens for changes — a manual trigger, an operator action in your ITSM, or a scheduled check for recent activity — and pushes only the delta to Raptor Comply. This is more efficient at scale but requires you to track state and handle failures carefully so individual missed events don't cause drift.
+
+For most teams, **start with full sync** and move to event-driven if volume or latency requirements demand it.
+
+## Fetching all cyber assets
+
+`GET /cyber-assets` returns the complete list of cyber assets in your organization. Include both required authentication headers on every request.
+
+```bash theme={null}
+curl https://api.raptormaps.com/cyber-assets \
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
+  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+```
+
+A successful response returns a JSON array:
+
+```json theme={null}
+[
+  {
+    "id": "ca_01ABC123",
+    "name": "RTU-PLANT-01",
+    "asset_type": "hardware",
+    "cyber_system_id": "cs_01ABC456",
+    "created_at": "2024-03-15T10:30:00Z",
+    "updated_at": "2024-03-15T10:30:00Z"
+  },
+  {
+    "id": "ca_01DEF789",
+    "name": "HMI-CTRL-02",
+    "asset_type": "hardware",
+    "cyber_system_id": "cs_01ABC456",
+    "created_at": "2024-04-01T08:00:00Z",
+    "updated_at": "2024-06-12T14:22:00Z"
+  }
+]
+```
+
+## Filtering by facility
+
+Filtering cyber assets by facility directly (e.g., `GET /facilities/{facilityId}/cyber-assets`) is **coming soon**. Until that endpoint is available, fetch all assets from `GET /cyber-assets` and filter client-side by matching `cyber_system_id` values to the cyber systems associated with each facility.
+
+You can retrieve the list of facilities with `GET /facilities` and cyber systems with `GET /cyber-systems` to build that mapping locally.
+
+## Creating a new cyber asset
+
+When a new device is commissioned, use `POST /cyber-assets` to add it to Raptor Comply at the same time you create its record in your CMDB. You must supply at minimum a `name`, the `cyber_system_id` it belongs to, and the `asset_type`.
+
+```bash theme={null}
+curl -X POST https://api.raptormaps.com/cyber-assets \
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
+  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "RTU-PLANT-01",
+    "cyber_system_id": "cs_01ABC456",
+    "asset_type": "hardware"
+  }'
+```
+
+The response includes the newly assigned `id`. Capture that value — you'll need it for future updates and deletes.
+
+## Updating an existing asset
+
+Use `PATCH /cyber-assets/{id}` to update an existing cyber asset. The PATCH method is a partial update: include only the fields you want to change, and all other fields remain untouched.
+
+```bash theme={null}
+curl -X PATCH https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
+  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "RTU-PLANT-01-UPDATED"
+  }'
+```
+
+Replace `ca_01ABC123` with the Raptor Comply `id` for the asset you want to modify.
+
+## Removing a decommissioned asset
+
+When a device is retired or decommissioned, delete it from Raptor Comply with `DELETE /cyber-assets/{id}`:
+
+```bash theme={null}
+curl -X DELETE https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
+  -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
+  -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+```
+
+A successful delete returns an HTTP `204 No Content` response with no body. Deletion is permanent — see [Create, Update, and Delete Cyber Assets](/guides/manage-cyber-assets) for the warning details.
+
+## Example: full sync in Node.js
+
+The script below demonstrates a complete full-sync loop: fetch all cyber assets from Raptor Comply, compare to the records in your CMDB, create anything missing, and remove anything decommissioned.
+
+```javascript theme={null}
+const BASE_URL = "https://api.raptormaps.com";
+const HEADERS = {
+  "X-API-Key": process.env.RAPTOR_COMPLY_API_KEY,
+  "Organization": process.env.RAPTOR_COMPLY_ORG_SLUG,
+  "Content-Type": "application/json",
+};
+
+async function apiRequest(method, path, body) {
+  const response = await fetch(`${BASE_URL}${path}`, {
+    method,
+    headers: HEADERS,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`[${response.status}] ${error.error}: ${error.message}`);
+  }
+
+  // 204 No Content has no body
+  if (response.status === 204) return null;
+  return response.json();
+}
+
+async function syncCyberAssets(cmdb) {
+  // 1. Fetch the full list from Raptor Comply
+  const raptorAssets = await apiRequest("GET", "/cyber-assets");
+
+  // Build a lookup map: raptorId -> asset
+  const raptorById = new Map(raptorAssets.map((a) => [a.id, a]));
+
+  // 2. Fetch your existing CMDB records that have a Raptor Comply reference
+  const cmdbAssets = await cmdb.getCyberAssets(); // your implementation
+  const cmdbByRaptorId = new Map(
+    cmdbAssets
+      .filter((a) => a.raptorComplyId)
+      .map((a) => [a.raptorComplyId, a])
+  );
+
+  // 3. Create assets that exist in Raptor Comply but not in your CMDB
+  for (const [raptorId, raptorAsset] of raptorById) {
+    if (!cmdbByRaptorId.has(raptorId)) {
+      console.log(`Creating CMDB record for: ${raptorAsset.name}`);
+      await cmdb.createCyberAsset({
+        name: raptorAsset.name,
+        assetType: raptorAsset.asset_type,
+        raptorComplyId: raptorId, // store as external reference
+      });
+    }
+  }
+
+  // 4. Remove CMDB records for assets that no longer exist in Raptor Comply
+  for (const [raptorId, cmdbAsset] of cmdbByRaptorId) {
+    if (!raptorById.has(raptorId)) {
+      console.log(`Removing decommissioned asset from CMDB: ${cmdbAsset.name}`);
+      await cmdb.deleteCyberAsset(cmdbAsset.id);
+    }
+  }
+
+  console.log(`Sync complete. Raptor Comply total: ${raptorAssets.length}`);
+}
+```
+
+Extend this pattern to handle updates — for example, comparing `updated_at` timestamps to detect changed assets and patching your CMDB records accordingly.
+
+<Tip>
+  Store the Raptor Comply `id` of each cyber asset in your CMDB as an external reference field (e.g., `raptorComplyId`). This gives you a stable, collision-free key to match records across both systems during updates, deletes, and audits — even if asset names are changed.
+</Tip>

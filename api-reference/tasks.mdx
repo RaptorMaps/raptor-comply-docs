@@ -1,0 +1,232 @@
+---
+title: "Tasks API — Manage Compliance Tasks and Assignments"
+description: "Manage NERC CIP compliance tasks in Raptor Comply: bulk-create tasks, update recurring control instances, and reassign work across your team. Coming soon."
+---
+
+> Manage NERC CIP compliance tasks in Raptor Comply: bulk-create tasks, update recurring control instances, and reassign work across your team. Coming soon.
+
+Tasks in Raptor Comply represent the discrete action items that keep your NERC CIP compliance program on schedule. They capture everything from quarterly vulnerability assessments and annual policy reviews to one-off remediation activities that follow an audit finding. Each task carries an owner, a due date, a status, and links to the assets or controls it relates to.
+
+When the Tasks API launches, you will be able to create and manage tasks programmatically, bulk-load tasks from your project management tools, update recurring task instances independently of their parent schedule, and reassign work across your team when personnel responsibilities change.
+
+<Note>
+  All endpoints on this page are coming soon. They exist in the Raptor Comply
+  platform but are not yet available via API key auth. Subscribe to release
+  notes to be notified when they launch.
+</Note>
+
+## Authentication
+
+Every request requires your API key and organization identifier as headers:
+
+```http theme={null}
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+All requests are made against the base URL `https://api.raptormaps.com`.
+
+***
+
+## Recurring tasks and task instances
+
+Many NERC CIP controls require activities on a fixed cadence — for example, reviewing access lists every quarter or testing incident response plans annually. Raptor Comply models this with a **parent task** that defines the recurring schedule and **task instances** that represent each individual occurrence.
+
+The parent task (`id`) holds the schedule definition. Each instance is identified by its `parentTaskId` combined with its specific `dueDate`. When you need to update the status, notes, or assignee for a single occurrence without changing the rest of the series, you use `PUT /tasks/{parentTaskId}/{dueDate}` to target that instance precisely.
+
+***
+
+## Endpoint reference
+
+### Core task operations
+
+| Method   | Path          | Operation         | Description                                                                                                                     |
+| -------- | ------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/tasks`      | `getTasks`        | List all tasks in your organization. Supports filtering by assignee, status, due date range, and related resource.              |
+| `POST`   | `/tasks`      | `createTask`      | Create a single task with a title, owner, due date, and optional resource associations.                                         |
+| `POST`   | `/tasks/bulk` | `bulkCreateTasks` | Create multiple tasks in one request. Useful for loading a full compliance calendar or migrating tasks from another system.     |
+| `GET`    | `/tasks/{id}` | `getTask`         | Retrieve a single task, including its current status, assignee, due date, and associated resources.                             |
+| `PUT`    | `/tasks/{id}` | `updateTask`      | Replace all editable fields on a task. Use this to update the schedule definition or owner on a recurring task's parent record. |
+| `DELETE` | `/tasks/{id}` | `deleteTask`      | Delete a task and all of its recurring instances.                                                                               |
+
+### Recurring task instances
+
+| Method | Path                              | Operation            | Description                                                                                                                                                                   |
+| ------ | --------------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PUT`  | `/tasks/{parentTaskId}/{dueDate}` | `updateTaskInstance` | Update a single instance of a recurring task by specifying the parent task ID and the instance's due date. Changes to this instance do not affect past or future occurrences. |
+
+### Bulk reassignment
+
+| Method | Path                       | Operation              | Description                                                                                                                                                                         |
+| ------ | -------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST` | `/tasks/reassign-from-csm` | `reassignTasksFromCsm` | Reassign all tasks currently owned by a departing CSM (Compliance Success Manager) to a new owner in bulk. Useful during staff transitions to prevent tasks from becoming orphaned. |
+
+***
+
+## Sample request and response shapes
+
+### Create a task
+
+```http theme={null}
+POST /tasks
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "title": "Q2 Access Control List Review — Substation Alpha",
+  "assigneeId": "usr_01hx2m7...",
+  "dueDate": "2025-06-30",
+  "recurrence": null,
+  "relatedResourceId": "ca_01hx4t8...",
+  "relatedResourceType": "cyber_asset",
+  "notes": "Review and update the electronic access control list per CIP-006 requirements."
+}
+```
+
+**Response `201 Created`:**
+
+```json theme={null}
+{
+  "id": "tsk_01hx8a3...",
+  "title": "Q2 Access Control List Review — Substation Alpha",
+  "assigneeId": "usr_01hx2m7...",
+  "status": "open",
+  "dueDate": "2025-06-30",
+  "recurrence": null,
+  "relatedResourceId": "ca_01hx4t8...",
+  "relatedResourceType": "cyber_asset",
+  "notes": "Review and update the electronic access control list per CIP-006 requirements.",
+  "createdAt": "2025-03-15T10:00:00Z",
+  "updatedAt": "2025-03-15T10:00:00Z"
+}
+```
+
+***
+
+### Bulk create tasks
+
+```http theme={null}
+POST /tasks/bulk
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "tasks": [
+    {
+      "title": "Annual Incident Response Plan Review",
+      "assigneeId": "usr_03hx5r9...",
+      "dueDate": "2025-12-01",
+      "recurrence": "yearly"
+    },
+    {
+      "title": "Quarterly Vulnerability Assessment — Control Center",
+      "assigneeId": "usr_01hx2m7...",
+      "dueDate": "2025-06-15",
+      "recurrence": "quarterly"
+    }
+  ]
+}
+```
+
+**Response `201 Created`:**
+
+```json theme={null}
+{
+  "created": 2,
+  "tasks": [
+    {
+      "id": "tsk_02bc9d1...",
+      "title": "Annual Incident Response Plan Review",
+      "status": "open",
+      "dueDate": "2025-12-01"
+    },
+    {
+      "id": "tsk_03ef0g2...",
+      "title": "Quarterly Vulnerability Assessment — Control Center",
+      "status": "open",
+      "dueDate": "2025-06-15"
+    }
+  ]
+}
+```
+
+***
+
+### Update a single recurring task instance
+
+```http theme={null}
+PUT /tasks/tsk_03ef0g2.../2025-09-15
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "status": "complete",
+  "completedAt": "2025-09-14T16:45:00Z",
+  "notes": "Assessment completed. No critical findings. See attached evidence."
+}
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "parentTaskId": "tsk_03ef0g2...",
+  "dueDate": "2025-09-15",
+  "status": "complete",
+  "completedAt": "2025-09-14T16:45:00Z",
+  "notes": "Assessment completed. No critical findings. See attached evidence."
+}
+```
+
+***
+
+### Reassign tasks from a departing CSM
+
+```http theme={null}
+POST /tasks/reassign-from-csm
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "fromUserId": "usr_departing_01...",
+  "toUserId": "usr_replacement_02..."
+}
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "reassigned": 14,
+  "fromUserId": "usr_departing_01...",
+  "toUserId": "usr_replacement_02..."
+}
+```
+
+***
+
+## Task status values
+
+| Status        | Meaning                                                   |
+| ------------- | --------------------------------------------------------- |
+| `open`        | Task has been created and is awaiting action.             |
+| `in_progress` | Work on this task has started.                            |
+| `complete`    | The task has been finished.                               |
+| `overdue`     | The due date has passed and the task is not yet complete. |
+| `cancelled`   | The task was voided and will not be completed.            |
+
+***
+
+## What you can build
+
+Once these endpoints are available, you will be able to:
+
+* **Mirror your compliance calendar.** Bulk-create tasks at the start of each compliance year using `POST /tasks/bulk` to load your full schedule of required CIP activities at once.
+* **Sync with project management tools.** Use `PUT /tasks/{id}` to write status updates back to Raptor Comply when work is marked complete in Jira, ServiceNow, or your internal ticketing system.
+* **Handle staff transitions cleanly.** When a compliance manager leaves, call `POST /tasks/reassign-from-csm` once to transfer all open tasks to their replacement — no hunting through individual records.
+* **Track recurring control cadences.** Use `PUT /tasks/{parentTaskId}/{dueDate}` to close out individual recurring instances as they are completed without disturbing the rest of the series.
+* **Build deadline dashboards.** Poll `GET /tasks` filtered by `status=open` and sort by `dueDate` to surface upcoming compliance deadlines in your internal reporting.

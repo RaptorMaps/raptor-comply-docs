@@ -26,15 +26,48 @@
     "name": "Sign In",
     "url": "https://app.raptormaps.com"
   },
-  "anchors": [],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "authentication", "quickstart"]
+      "pages": [
+        "introduction",
+        "authentication",
+        "quickstart"
+      ]
     },
     {
-      "group": "Reference",
-      "pages": ["endpoints"]
+      "group": "Concepts",
+      "pages": [
+        "concepts/data-model",
+        "concepts/organizations",
+        "concepts/permissions"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/sync-cmdb",
+        "guides/manage-cyber-assets",
+        "guides/error-handling"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview",
+        "api-reference/facilities",
+        "api-reference/control-centers",
+        "api-reference/cyber-systems",
+        "api-reference/cyber-assets",
+        "api-reference/access-control",
+        "api-reference/policy-documents",
+        "api-reference/evidence",
+        "api-reference/tasks",
+        "api-reference/training",
+        "api-reference/users",
+        "api-reference/activity",
+        "api-reference/errors"
+      ]
     }
   ],
   "footerSocials": {

@@ -1,33 +1,49 @@
 ---
-title: Welcome
-description: Raptor Comply API for NERC owners and operators
+title: "Raptor Comply API: OT Compliance for NERC entities"
+description: "Raptor Comply gives GO, GOP, TO, and TOP entities a REST API to maintain NERC internal controls and workflows for work order sync, cyber assets for CMDB sync and evidence for file system sync."
 ---
 
-[Raptor Comply](https://raptorcomply.com) is a NERC OT compliance platform covering CIP and O&P standards. This API gives NERC owners and operators (GO, GOP, TO, TOP) programmatic access to their compliance data so it can flow into CMDBs, CMMSs, ITSM systems, SIEMs, and any other internal tooling.
+> Raptor Comply gives GO, GOP, TO, and TOP entities a REST API to maintain NERC internal controls and workflows for work order sync, cyber assets for CMDB sync and evidence for file system sync.
 
-<Note>
-  Full API reference and try-it-now playground arriving with our next release. Until
-  then, see [Authentication](/authentication) and [Quickstart](/quickstart) for
-  header setup and a runnable example.
-</Note>
+[Raptor Comply](https://raptorcomply.com) is a NERC OT compliance platform covering CIP and O\&P standards for electric utilities. The Raptor Comply REST API gives you - compliance leads, OT engineers, and integration developers at GO, GOP, TO, and TOP entities - programmatic access to your compliance data. Use it to sync assets into your CMDB, feed your SIEM, integrate with your CMMS, or automate any part of your compliance workflow that lives outside the Raptor Comply UI.
 
-## What you can do
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/authentication">
+    Set up your API key and organization slug, understand error responses, and learn key rotation best practices.
+  </Card>
 
-| Resource | Access |
-|---|---|
-| **Facilities** | Read |
-| **Control Centers** | Read |
-| **Cyber Systems** | Read |
-| **Cyber Assets** | Read, create, update, delete |
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Make your first API call in under five minutes using curl, Node.js, or Python.
+  </Card>
 
-The surface is intentionally narrow. Read access covers the structural objects you've already classified in Raptor Comply. Cyber asset CRUD is full so you can keep your downstream CMDB synced as assets are added, retired, or reclassified.
+  <Card title="API Reference" icon="code" href="/api-reference/overview">
+    Explore full request and response schemas, with a live try-it-now playground.
+  </Card>
+
+  <Card title="Guides" icon="arrows-rotate" href="/guides/sync-cmdb">
+    Step-by-step integration guides, including how to keep your CMDB in sync with Raptor Comply cyber assets.
+  </Card>
+</CardGroup>
+
+## What the API covers
+
+The current API surface focuses on your core NERC CIP inventory objects. Read access lets you pull the structural data you've already classified in Raptor Comply. Full CRUD on cyber assets means you can drive asset lifecycle changes - additions, retirements, reclassifications - directly from your integration tooling. We are extending the API surface to other objects within the data model: controls, tasks, incidents, access requests, documents and evidence.
+
+| Resource            | Access                       |
+| ------------------- | ---------------------------- |
+| **Facilities**      | Read                         |
+| **Control Centers** | Read                         |
+| **Cyber Systems**   | Read                         |
+| **Cyber Assets**    | Read, Create, Update, Delete |
+
+All requests go to the base URL `https://api.raptormaps.com` and require the `X-API-Key` and `Organization` headers on every call. See [Authentication](/authentication) for details.
 
 ## Who this is for
 
-This API is for the people who own the data in your Raptor Comply tenant: compliance leads, OT engineers, and the integration developers building bridges between Raptor Comply and the rest of your operations stack. If you're a vendor working with Raptor Comply on behalf of a customer, you'll need API credentials scoped to their organization.
+**Compliance leads** who need to export or cross-reference CIP inventory data without manual downloads.
 
-## Next steps
+**OT engineers** who manage cyber asset lifecycles and want changes reflected in downstream CMDBs or CMMSs without double entry.
 
-- [Authentication](/authentication) — how to get an API key and pass the two required headers.
-- [Quickstart](/quickstart) — list your facilities in one curl command.
-- [Endpoint Catalog](/endpoints) — every endpoint in the Raptor Comply API, with availability status.
+**Integration developers** building the pipelines between Raptor Comply and the rest of your operations stack - SIEMs, ticketing systems, asset management platforms, and internal tooling.
+
+If you're a vendor working with Raptor Comply on behalf of a utility, you'll need API credentials scoped to that utility's organization. Ask your Raptor Comply organization admin to generate them.

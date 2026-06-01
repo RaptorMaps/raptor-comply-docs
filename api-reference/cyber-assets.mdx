@@ -1,0 +1,367 @@
+---
+title: "Cyber Assets API — Full CRUD for Your Compliance Inventory"
+description: "Create, read, update, and delete NERC CIP cyber assets via the Raptor Comply API. Keep your CMDB in sync with your live compliance inventory."
+---
+
+> Create, read, update, and delete NERC CIP cyber assets via the Raptor Comply API. Keep your CMDB in sync with your live compliance inventory.
+
+Cyber assets are the individual hardware and software components — RTUs, HMIs, servers, applications, and networking devices — that make up your BES Cyber Systems. Full create, read, update, and delete access is available today, making the `/cyber-assets` endpoints the primary integration surface for keeping your downstream CMDB synchronized with your live Raptor Comply compliance inventory.
+
+<Note>
+  Every request to the Raptor Comply API requires two headers: **X-API-Key** (your API key) and **Organization** (your organization slug). See [Authentication](/authentication) for setup instructions.
+</Note>
+
+***
+
+## Available endpoints
+
+### List all cyber assets
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-assets`
+
+Returns an array of all cyber assets belonging to your organization. Use this endpoint to load your full compliance inventory — for example, to diff it against your CMDB, feed a SIEM, or populate a reporting dashboard.
+
+#### Request
+
+No path or query parameters are required. Include your authentication headers on every request.
+
+```bash theme={null}
+curl --request GET \
+  --url https://api.raptormaps.com/cyber-assets \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Organization: your-org-slug'
+```
+
+#### Response
+
+Returns `200 OK` with a JSON array of cyber asset objects.
+
+<ResponseField name="id" type="string">
+  Unique identifier for the cyber asset, prefixed with `ca_`.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Human-readable name or hostname of the asset, e.g. `RTU-PLANT-01`.
+</ResponseField>
+
+<ResponseField name="cyber_system_id" type="string">
+  The unique identifier of the BES Cyber System this asset belongs to. Use `GET /cyber-systems/{id}` to look up system details.
+</ResponseField>
+
+<ResponseField name="asset_type" type="string">
+  The classification of the asset. Common values include `hardware` and `software`.
+</ResponseField>
+
+<ResponseField name="organization_slug" type="string">
+  The slug of the organization that owns this cyber asset. Matches the value you pass in the `Organization` header.
+</ResponseField>
+
+```json theme={null}
+[
+  {
+    "id": "ca_01GHI...",
+    "name": "RTU-PLANT-01",
+    "cyber_system_id": "cs_01DEF...",
+    "asset_type": "hardware",
+    "organization_slug": "acme-utility"
+  }
+]
+```
+
+***
+
+### Create a cyber asset
+
+<span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/cyber-assets`
+
+Creates a new cyber asset in your Raptor Comply compliance inventory. Use this endpoint whenever a new device or software component is commissioned at a site, so your compliance record stays current without manual data entry in the platform UI.
+
+#### Request body
+
+<ParamField body="name" type="string" required>
+  A unique, human-readable name or hostname for the asset, e.g. `RTU-PLANT-01`. This value appears throughout the Raptor Comply UI and in compliance reports.
+</ParamField>
+
+<ParamField body="cyber_system_id" type="string" required>
+  The unique identifier of the BES Cyber System this asset belongs to, e.g. `cs_01DEF...`. The asset inherits the impact rating of its parent system. You can list available systems with `GET /cyber-systems`.
+</ParamField>
+
+<ParamField body="asset_type" type="string" required>
+  The classification of the asset. Accepted values are `hardware` and `software`. Hardware covers physical devices such as RTUs, PLCs, HMIs, and networking equipment. Software covers applications and operating systems classified under a BCS.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request POST \
+  --url https://api.raptormaps.com/cyber-assets \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Organization: your-org-slug' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "RTU-PLANT-01",
+    "cyber_system_id": "cs_01DEF...",
+    "asset_type": "hardware"
+  }'
+```
+
+#### Response
+
+Returns `201 Created` with the newly created cyber asset object.
+
+<ResponseField name="id" type="string">
+  The system-assigned unique identifier for the new cyber asset, prefixed with `ca_`.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  The name you provided.
+</ResponseField>
+
+<ResponseField name="cyber_system_id" type="string">
+  The BES Cyber System the asset was assigned to.
+</ResponseField>
+
+<ResponseField name="asset_type" type="string">
+  The asset classification you provided.
+</ResponseField>
+
+<ResponseField name="organization_slug" type="string">
+  The organization slug derived from your `Organization` header.
+</ResponseField>
+
+```json theme={null}
+{
+  "id": "ca_01GHI...",
+  "name": "RTU-PLANT-01",
+  "cyber_system_id": "cs_01DEF...",
+  "asset_type": "hardware",
+  "organization_slug": "acme-utility"
+}
+```
+
+***
+
+### Get a single cyber asset
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-assets/{id}`
+
+Returns a single cyber asset by its unique identifier. Use this endpoint to fetch the current state of a specific asset — for example, to verify a record before updating it, or to resolve an asset ID received from a webhook or integration event.
+
+#### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the cyber asset, e.g. `ca_01GHI...`. You can obtain this value from the `id` field returned by `GET /cyber-assets` or from the `201` response body after creating an asset.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request GET \
+  --url https://api.raptormaps.com/cyber-assets/ca_01GHI... \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Organization: your-org-slug'
+```
+
+#### Response
+
+Returns `200 OK` with a single cyber asset object.
+
+<ResponseField name="id" type="string">
+  Unique identifier for the cyber asset.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Human-readable name or hostname of the asset.
+</ResponseField>
+
+<ResponseField name="cyber_system_id" type="string">
+  The unique identifier of the BES Cyber System this asset belongs to.
+</ResponseField>
+
+<ResponseField name="asset_type" type="string">
+  The classification of the asset: `hardware` or `software`.
+</ResponseField>
+
+<ResponseField name="organization_slug" type="string">
+  The slug of the organization that owns this cyber asset.
+</ResponseField>
+
+```json theme={null}
+{
+  "id": "ca_01GHI...",
+  "name": "RTU-PLANT-01",
+  "cyber_system_id": "cs_01DEF...",
+  "asset_type": "hardware",
+  "organization_slug": "acme-utility"
+}
+```
+
+***
+
+### Update a cyber asset
+
+<span style={{ background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>PATCH</span> `/cyber-assets/{id}`
+
+Partially updates a cyber asset. Send only the fields you want to change — any fields you omit remain unchanged. Use this endpoint to reflect hardware replacements, hostname changes, reclassifications, or reassignments to a different BES Cyber System.
+
+#### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the cyber asset to update, e.g. `ca_01GHI...`.
+</ParamField>
+
+#### Request body
+
+All body fields are optional. Include only the fields you want to update.
+
+<ParamField body="name" type="string">
+  An updated name or hostname for the asset.
+</ParamField>
+
+<ParamField body="cyber_system_id" type="string">
+  The unique identifier of the BES Cyber System to reassign this asset to. Use this when an asset is moved between systems during a reclassification exercise.
+</ParamField>
+
+<ParamField body="asset_type" type="string">
+  An updated asset classification. Accepted values are `hardware` and `software`.
+</ParamField>
+
+#### Request
+
+The example below renames an existing asset without touching any other fields.
+
+```bash theme={null}
+curl --request PATCH \
+  --url https://api.raptormaps.com/cyber-assets/ca_01GHI... \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Organization: your-org-slug' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "RTU-PLANT-01-REPLACED"
+  }'
+```
+
+#### Response
+
+Returns `200 OK` with the full updated cyber asset object reflecting all current field values.
+
+```json theme={null}
+{
+  "id": "ca_01GHI...",
+  "name": "RTU-PLANT-01-REPLACED",
+  "cyber_system_id": "cs_01DEF...",
+  "asset_type": "hardware",
+  "organization_slug": "acme-utility"
+}
+```
+
+***
+
+### Delete a cyber asset
+
+<span style={{ background: '#ef4444', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>DELETE</span> `/cyber-assets/{id}`
+
+Permanently removes a cyber asset from your Raptor Comply compliance inventory. Use this endpoint when a device is decommissioned or a software component is retired, so your compliance record accurately reflects your current environment.
+
+<Warning>
+  Deletion is permanent. Once you delete a cyber asset it cannot be recovered via the API. If you need to retain historical compliance records, archive or export the asset data before deleting.
+</Warning>
+
+#### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the cyber asset to delete, e.g. `ca_01GHI...`.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request DELETE \
+  --url https://api.raptormaps.com/cyber-assets/ca_01GHI... \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Organization: your-org-slug'
+```
+
+#### Response
+
+Returns `204 No Content` on success. The response body is empty. If no asset with the given ID exists, the API returns `404 Not Found`.
+
+***
+
+## Coming soon
+
+The following endpoints exist in the Raptor Comply API but are not yet available via API-key authentication. They are documented here so you can plan bulk-import and scoped-query workflows in advance. Subscribe to [release notes](#) to be notified when each batch becomes available.
+
+<Note>
+  The endpoints below are **coming soon** and are not yet accessible with your API key. Requests to these paths will not succeed. Check back for updates.
+</Note>
+
+### Download the CSV import template
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-assets/import/template`
+
+**Operation:** `getCyberAssetsImportTemplate` — Downloads a pre-formatted CSV template you can populate and submit to the bulk import endpoint.
+
+***
+
+### List cyber assets by system
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-systems/{cyberSystemId}/cyber-assets`
+
+**Operation:** `getCyberAssetsBySystem` — Returns all cyber assets belonging to the specified BES Cyber System. Useful for scoped inventory queries without filtering the full asset list client-side.
+
+***
+
+### Bulk import cyber assets for a system
+
+<span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/cyber-systems/{cyberSystemId}/cyber-assets/import`
+
+**Operation:** `importCyberAssets` — Bulk-creates cyber assets under the specified BES Cyber System from a CSV file. Use the `GET /cyber-assets/import/template` endpoint to obtain the correct CSV format before submitting.
+
+***
+
+### List cyber assets by facility
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/cyber-assets`
+
+**Operation:** `getCyberAssetsByFacility` — Returns all cyber assets associated with the specified facility, across all BES Cyber Systems at that site.
+
+***
+
+### Export cyber assets for a facility as CSV
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/cyber-assets/export`
+
+**Operation:** `exportCyberAssetsCsv` — Exports all high- and medium-impact cyber assets at the specified facility as a downloadable CSV file. Useful for offline compliance reporting or handoff to auditors.
+
+***
+
+### Export low-impact cyber assets for a facility as CSV
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/cyber-assets/export-low`
+
+**Operation:** `exportLowCyberAssetsCsv` — Exports all low-impact cyber assets at the specified facility as a downloadable CSV file. Use this alongside `exportCyberAssetsCsv` to produce a complete facility-level asset export separated by impact tier.
+
+***
+
+### List cyber assets by control center
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/cyber-assets`
+
+**Operation:** `getCyberAssetsByControlCenter` — Returns all cyber assets associated with the specified control center, across all BES Cyber Systems under that operational hub.
+
+***
+
+### Export cyber assets for a control center as CSV
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/cyber-assets/export`
+
+**Operation:** `exportControlCenterCyberAssetsCsv` — Exports all high- and medium-impact cyber assets associated with the specified control center as a downloadable CSV file.
+
+***
+
+### Export low-impact cyber assets for a control center as CSV
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/cyber-assets/export-low`
+
+**Operation:** `exportControlCenterLowCyberAssetsCsv` — Exports all low-impact cyber assets associated with the specified control center as a downloadable CSV file. Use alongside `exportControlCenterCyberAssetsCsv` for a complete control-center-level asset export separated by impact tier.

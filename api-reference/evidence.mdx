@@ -1,0 +1,199 @@
+---
+title: "Evidence API — Attach Compliance Evidence to Resources"
+description: "Create, retrieve, and delete compliance evidence linked to Raptor Comply resources like cyber assets, tasks, and policy documents. Coming soon."
+---
+
+> Create, retrieve, and delete compliance evidence linked to Raptor Comply resources like cyber assets, tasks, and policy documents. Coming soon.
+
+Evidence records are how Raptor Comply ties proof to compliance. Whenever you complete a control activity — a patch, a physical inspection, a configuration review — you need a verifiable artifact that demonstrates it happened. Raptor Comply lets you link evidence (files, notes, external links) to any compliance resource in the platform, such as a cyber asset, a task, or a policy document.
+
+When the Evidence API launches, you will be able to upload and retrieve that proof programmatically, eliminating the need to manually attach files through the UI. This makes it practical to pipe evidence directly from your operational tooling — patch management systems, SIEM exports, ticketing platforms — straight into your Raptor Comply compliance record.
+
+<Note>
+  All endpoints on this page are coming soon. They exist in the Raptor Comply
+  platform but are not yet available via API key auth. Subscribe to release
+  notes to be notified when they launch.
+</Note>
+
+## Authentication
+
+Every request requires your API key and organization identifier as headers:
+
+```http theme={null}
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+All requests are made against the base URL `https://api.raptormaps.com`.
+
+***
+
+## How evidence works
+
+An evidence record is a lightweight object that represents one artifact of proof. It holds:
+
+* **A link to the resource it supports** — identified by `resourceId` and `resourceType` (e.g., a cyber asset ID, a task ID, or a policy document ID).
+* **The artifact itself** — either a file reference (linked via a `fileId` from the Files API), a plain-text note, or an external URL.
+* **Metadata** — who created it, when, and an optional description to explain what the evidence demonstrates.
+
+Evidence records are immutable once created. To update evidence, delete the existing record and create a new one. This preserves the integrity of your compliance audit trail.
+
+***
+
+## Endpoint reference
+
+| Method   | Path                                 | Operation                | Description                                                                |
+| -------- | ------------------------------------ | ------------------------ | -------------------------------------------------------------------------- |
+| `POST`   | `/evidence`                          | `createEvidence`         | Create a new evidence record and link it to a compliance resource.         |
+| `GET`    | `/evidence/{id}`                     | `getEvidenceById`        | Retrieve a single evidence record by its unique ID.                        |
+| `GET`    | `/evidence/by-resource/{resourceId}` | `listEvidenceByResource` | List all evidence records attached to a specific resource.                 |
+| `DELETE` | `/evidence/{id}`                     | `deleteEvidence`         | Permanently delete an evidence record and its association to the resource. |
+
+***
+
+## Sample request and response shapes
+
+### Create an evidence record
+
+```http theme={null}
+POST /evidence
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "resourceId": "ca_01hx4t8...",
+  "resourceType": "cyber_asset",
+  "type": "file",
+  "fileId": "fl_09kz2p1...",
+  "description": "Patch log confirming CIP-007 patch applied 2025-03-01."
+}
+```
+
+**Response `201 Created`:**
+
+```json theme={null}
+{
+  "id": "ev_01hx9b3...",
+  "resourceId": "ca_01hx4t8...",
+  "resourceType": "cyber_asset",
+  "type": "file",
+  "fileId": "fl_09kz2p1...",
+  "description": "Patch log confirming CIP-007 patch applied 2025-03-01.",
+  "createdBy": "usr_01hx2m7...",
+  "createdAt": "2025-03-15T14:30:00Z"
+}
+```
+
+***
+
+### List all evidence for a resource
+
+```http theme={null}
+GET /evidence/by-resource/ca_01hx4t8...
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "data": [
+    {
+      "id": "ev_01hx9b3...",
+      "resourceId": "ca_01hx4t8...",
+      "resourceType": "cyber_asset",
+      "type": "file",
+      "fileId": "fl_09kz2p1...",
+      "description": "Patch log confirming CIP-007 patch applied 2025-03-01.",
+      "createdBy": "usr_01hx2m7...",
+      "createdAt": "2025-03-15T14:30:00Z"
+    },
+    {
+      "id": "ev_02ac7d5...",
+      "resourceId": "ca_01hx4t8...",
+      "resourceType": "cyber_asset",
+      "type": "note",
+      "noteText": "Confirmed no open vulnerabilities per vendor advisory 2025-Q1.",
+      "createdBy": "usr_03hx5r9...",
+      "createdAt": "2025-03-20T09:15:00Z"
+    }
+  ],
+  "total": 2
+}
+```
+
+***
+
+### Retrieve a single evidence record
+
+```http theme={null}
+GET /evidence/ev_01hx9b3...
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "id": "ev_01hx9b3...",
+  "resourceId": "ca_01hx4t8...",
+  "resourceType": "cyber_asset",
+  "type": "file",
+  "fileId": "fl_09kz2p1...",
+  "description": "Patch log confirming CIP-007 patch applied 2025-03-01.",
+  "createdBy": "usr_01hx2m7...",
+  "createdAt": "2025-03-15T14:30:00Z"
+}
+```
+
+***
+
+### Delete an evidence record
+
+```http theme={null}
+DELETE /evidence/ev_01hx9b3...
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+**Response `204 No Content`**
+
+***
+
+## Evidence types
+
+When you create an evidence record, set the `type` field to one of the following values:
+
+| Type   | Description                                                                 |
+| ------ | --------------------------------------------------------------------------- |
+| `file` | Links to a file already uploaded via the Files API. Provide a `fileId`.     |
+| `note` | A free-text note. Provide a `noteText` string.                              |
+| `link` | An external URL pointing to a document or resource. Provide a `url` string. |
+
+***
+
+## Supported resource types
+
+Evidence can be attached to any of the following resource types in Raptor Comply:
+
+| `resourceType` value  | Resource                                               |
+| --------------------- | ------------------------------------------------------ |
+| `cyber_asset`         | A BES Cyber Asset or associated cyber system component |
+| `task`                | A compliance task or work item                         |
+| `policy_document`     | A NERC CIP policy or procedure document                |
+| `training_assignment` | A personnel training record                            |
+| `access_control`      | A physical or electronic access control record         |
+
+***
+
+## What you can build
+
+Once these endpoints are available, you will be able to:
+
+* **Automate evidence collection from operational systems.** When your patch management platform confirms a patch, POST the patch report directly to the corresponding cyber asset as an evidence record — no manual upload required.
+* **Build compliance dashboards.** Use `GET /evidence/by-resource/{resourceId}` to show the evidence count and status for each asset in a custom reporting view.
+* **Integrate ticketing systems.** When a Jira ticket or ServiceNow incident is closed, automatically create an evidence record on the related Raptor Comply task or asset.
+* **Audit package generation.** Pull all evidence for a set of assets or tasks and bundle them into an organized export for your NERC auditors.

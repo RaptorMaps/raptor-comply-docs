@@ -1,0 +1,155 @@
+---
+title: "Handle Raptor Comply API Errors in Your Integration"
+description: "Raptor Comply returns standard HTTP status codes with JSON error bodies. Learn how to handle 4xx and 5xx responses and retry safely in your integration."
+---
+
+> Raptor Comply returns standard HTTP status codes with JSON error bodies. Learn how to handle 4xx and 5xx responses and retry safely in your integration.
+
+The Raptor Comply API uses standard HTTP status codes to signal success and failure. Every error response includes a JSON body with two fields: `error`, a short code that identifies the error class, and `message`, a human-readable description of what went wrong. Building reliable integrations means checking these responses on every request and handling them appropriately.
+
+## Error response format
+
+All error responses follow the same structure:
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "Invalid API key"
+}
+```
+
+* **`error`** — a short string identifying the error type. Use this for programmatic branching.
+* **`message`** — a plain-English description. Include this in logs and alerts to make debugging faster.
+
+## Common error codes
+
+| Status | `error` value           | Cause                                   | Resolution                                                                 |
+| ------ | ----------------------- | --------------------------------------- | -------------------------------------------------------------------------- |
+| `400`  | `Bad Request`           | Missing `Organization` header           | Add the `Organization` header to every request                             |
+| `401`  | `Unauthorized`          | Missing or invalid `X-API-Key`          | Check that your API key is correct, active, and not expired                |
+| `403`  | `Forbidden`             | Key lacks permission for this operation | Contact your organization admin to review key permissions                  |
+| `404`  | `Not Found`             | Resource ID does not exist              | Verify the ID is correct and belongs to your organization                  |
+| `422`  | `Unprocessable Entity`  | Invalid request body                    | Check that all required fields are present and values match expected types |
+| `429`  | `Too Many Requests`     | Rate limit exceeded                     | Back off and retry after a delay (see retry guidance below)                |
+| `500`  | `Internal Server Error` | Unexpected server-side error            | Retry with exponential backoff; contact support if the error persists      |
+
+## Retry strategy
+
+Not all errors are worth retrying. Follow this rule:
+
+* **Retryable:** `429 Too Many Requests` and `5xx` server errors. These are transient conditions — the request itself is valid, and retrying after a delay will often succeed.
+* **Not retryable:** `4xx` errors (except `429`). These indicate a problem with the request — a missing header, a wrong ID, a malformed body. Retrying without fixing the underlying issue will not help.
+
+For retryable errors, use **exponential backoff with jitter** to avoid hammering the API and making rate-limit situations worse. A good starting point: wait 1 second before the first retry, double the wait on each subsequent attempt, add random jitter, and give up after 3–5 attempts.
+
+Here is a Node.js helper that wraps any API call with that pattern:
+
+```javascript theme={null}
+async function fetchWithRetry(url, options, maxRetries = 4) {
+  const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
+  let attempt = 0;
+
+  while (attempt <= maxRetries) {
+    const response = await fetch(url, options);
+
+    if (response.ok) {
+      return response;
+    }
+
+    const shouldRetry = RETRYABLE_STATUSES.has(response.status);
+
+    if (!shouldRetry || attempt === maxRetries) {
+      // Surface the error body for logging before throwing
+      const errorBody = await response.json();
+      const err = new Error(`${errorBody.error}: ${errorBody.message}`);
+      err.status = response.status;
+      err.body = errorBody;
+      throw err;
+    }
+
+    // Exponential backoff with jitter: base * 2^attempt + random ms
+    const baseDelay = 1000;
+    const jitter = Math.random() * 500;
+    const delay = baseDelay * Math.pow(2, attempt) + jitter;
+
+    console.warn(
+      `Request failed with ${response.status}. Retrying in ${Math.round(delay)}ms ` +
+      `(attempt ${attempt + 1} of ${maxRetries})...`
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    attempt++;
+  }
+}
+
+// Usage
+const response = await fetchWithRetry(
+  "https://api.raptormaps.com/cyber-assets",
+  {
+    headers: {
+      "X-API-Key": process.env.RAPTOR_COMPLY_API_KEY,
+      "Organization": process.env.RAPTOR_COMPLY_ORG_SLUG,
+    },
+  }
+);
+const assets = await response.json();
+```
+
+## Checking response status
+
+Always check the response status before consuming the body. Here are patterns in Node.js and Python:
+
+**Node.js — using `fetch`**
+
+```javascript theme={null}
+const response = await fetch("https://api.raptormaps.com/cyber-assets", {
+  headers: {
+    "X-API-Key": process.env.RAPTOR_COMPLY_API_KEY,
+    "Organization": process.env.RAPTOR_COMPLY_ORG_SLUG,
+  },
+});
+
+if (!response.ok) {
+  // response.ok is true for 2xx status codes only
+  const errorBody = await response.json();
+  console.error("API error:", errorBody); // log the full body
+  throw new Error(`${errorBody.error}: ${errorBody.message}`);
+}
+
+const assets = await response.json();
+```
+
+**Python — using `requests`**
+
+```python theme={null}
+import os
+import requests
+
+response = requests.get(
+    "https://api.raptormaps.com/cyber-assets",
+    headers={
+        "X-API-Key": os.environ["RAPTOR_COMPLY_API_KEY"],
+        "Organization": os.environ["RAPTOR_COMPLY_ORG_SLUG"],
+    },
+)
+
+# raise_for_status() raises requests.HTTPError for 4xx and 5xx responses
+try:
+    response.raise_for_status()
+except requests.HTTPError as e:
+    error_body = response.json()
+    print(f"API error [{response.status_code}]: {error_body}")
+    raise
+
+assets = response.json()
+```
+
+`response.raise_for_status()` throws a `requests.HTTPError` for any `4xx` or `5xx` response, and does nothing for successful `2xx` responses. Catch the exception and inspect `response.json()` to get the `error` and `message` fields.
+
+## Getting help
+
+If you receive persistent `500` errors or encounter unexpected behavior not explained by the error codes above, contact the Raptor Comply support team at [support@raptormaps.com](mailto:support@raptormaps.com). Include the full error response body, the endpoint you called, and the approximate time of the request to help the team diagnose the issue quickly.
+
+<Tip>
+  Always log the **full error response body** — not just the HTTP status code. The `error` and `message` fields are what tell you (and your on-call team) what actually went wrong. A log line that says `"API call failed: 401"` is much less useful than one that says `"API call failed: Unauthorized — API key has expired"`.
+</Tip>

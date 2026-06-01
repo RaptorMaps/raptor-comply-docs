@@ -1,0 +1,240 @@
+---
+title: "Training Modules and Assignments API for NERC Compliance"
+description: "Manage NERC CIP training modules and track personnel training assignments across facilities using the Raptor Comply API. Coming soon."
+---
+
+> Manage NERC CIP training modules and track personnel training assignments across facilities using the Raptor Comply API. Coming soon.
+
+NERC CIP Standard CIP-004 requires that all personnel with access to BES Cyber Systems receive security awareness training and role-based cyber security training on a defined schedule. Raptor Comply tracks this obligation in two layers: **training modules** define the curriculum, and **training assignments** track which personnel have been assigned to — and completed — each module, scoped to the specific facilities where they hold access.
+
+When the Training API launches, you will be able to manage your training program programmatically and integrate directly with your Learning Management System (LMS). Push new modules as your curriculum evolves, assign training to personnel as they onboard or change roles, mark completions as your LMS reports them, and export assignment records ready for an auditor's review.
+
+<Note>
+  All endpoints on this page are coming soon. They exist in the Raptor Comply
+  platform but are not yet available via API key auth. Subscribe to release
+  notes to be notified when they launch.
+</Note>
+
+## Authentication
+
+Every request requires your API key and organization identifier as headers:
+
+```http theme={null}
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+All requests are made against the base URL `https://api.raptormaps.com`.
+
+***
+
+## Training Modules
+
+A training module is the definition of a single course or training curriculum item. It describes what is to be learned, not who has been assigned to learn it. You define modules once and then assign them to as many personnel as needed.
+
+Modules typically map to specific CIP requirements — for example, a "CIP-004 Cyber Security Awareness" module or a "Physical Security Controls" role-based training course. You can create, update, and retire modules as your compliance program matures.
+
+### Endpoint reference
+
+| Method   | Path                     | Operation              | Description                                                                                                 |
+| -------- | ------------------------ | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/training-modules`      | `getTrainingModules`   | List all training modules in your organization.                                                             |
+| `POST`   | `/training-modules`      | `createTrainingModule` | Create a new training module definition.                                                                    |
+| `GET`    | `/training-modules/{id}` | `getTrainingModule`    | Retrieve a single training module by ID, including its title, description, and applicable CIP requirements. |
+| `PATCH`  | `/training-modules/{id}` | `updateTrainingModule` | Update a training module's metadata, such as its title, description, or required completion interval.       |
+| `DELETE` | `/training-modules/{id}` | `deleteTrainingModule` | Delete a training module. Modules with existing active assignments cannot be deleted.                       |
+
+### Sample: Create a training module
+
+```http theme={null}
+POST /training-modules
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "title": "CIP-004 Cyber Security Awareness Training",
+  "description": "Annual security awareness training required for all personnel with access to BES Cyber Systems.",
+  "cipStandard": "CIP-004",
+  "completionIntervalDays": 365,
+  "externalModuleUrl": "https://lms.yourcompany.com/courses/cip-004-awareness"
+}
+```
+
+**Response `201 Created`:**
+
+```json theme={null}
+{
+  "id": "tm_01hx6c4...",
+  "title": "CIP-004 Cyber Security Awareness Training",
+  "description": "Annual security awareness training required for all personnel with access to BES Cyber Systems.",
+  "cipStandard": "CIP-004",
+  "completionIntervalDays": 365,
+  "externalModuleUrl": "https://lms.yourcompany.com/courses/cip-004-awareness",
+  "createdAt": "2025-03-15T08:00:00Z",
+  "updatedAt": "2025-03-15T08:00:00Z"
+}
+```
+
+***
+
+## Training Assignments
+
+A training assignment connects a specific person to a specific training module and tracks whether they have completed it. Assignments can be scoped to one or more facilities, which is important for CIP-004 compliance where training obligations depend on which BES Cyber Systems a person can access.
+
+Raptor Comply stores a completion record when you mark an assignment complete, capturing who completed the training, when, and optionally what score or certificate reference was recorded. You can export all assignments in a format ready for audit submission.
+
+### Endpoint reference
+
+#### Core assignment operations
+
+| Method   | Path                                  | Operation                    | Description                                                                                                                                    |
+| -------- | ------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/training-assignments`               | `getTrainingAssignments`     | List all training assignments in your organization. Filter by assignee, module, facility, status, or completion date.                          |
+| `POST`   | `/training-assignments`               | `createTrainingAssignment`   | Create a new training assignment linking a person to a training module.                                                                        |
+| `GET`    | `/training-assignments/export`        | `exportTrainingAssignments`  | Export all training assignment records in a structured format (CSV or JSON) suitable for audit submission.                                     |
+| `GET`    | `/training-assignments/{id}`          | `getTrainingAssignment`      | Retrieve a single training assignment by ID, including completion status and facility scope.                                                   |
+| `PATCH`  | `/training-assignments/{id}`          | `updateTrainingAssignment`   | Update a training assignment's metadata, such as the due date or assigned module.                                                              |
+| `POST`   | `/training-assignments/{id}/complete` | `completeTrainingAssignment` | Mark a training assignment as complete. Records the completion timestamp, the completing user, and an optional score or certificate reference. |
+| `DELETE` | `/training-assignments/{id}`          | `deleteTrainingAssignment`   | Delete a training assignment record.                                                                                                           |
+
+#### Facility scoping
+
+| Method   | Path                                                                   | Operation                         | Description                                                            |
+| -------- | ---------------------------------------------------------------------- | --------------------------------- | ---------------------------------------------------------------------- |
+| `GET`    | `/training-assignments/{trainingAssignmentId}/facilities`              | `getTrainingAssignmentFacilities` | List the facilities currently scoped to this training assignment.      |
+| `POST`   | `/training-assignments/{trainingAssignmentId}/facilities`              | `addFacilitiesToAssignment`       | Add one or more facilities to the scope of a training assignment.      |
+| `DELETE` | `/training-assignments/{trainingAssignmentId}/facilities/{facilityId}` | `removeFacilityFromAssignment`    | Remove a specific facility from the scope of this training assignment. |
+
+***
+
+### Sample: Create a training assignment
+
+```http theme={null}
+POST /training-assignments
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "userId": "usr_01hx2m7...",
+  "trainingModuleId": "tm_01hx6c4...",
+  "dueDate": "2025-04-30",
+  "notes": "Annual CIP-004 requirement. Personnel joined 2025-02-01."
+}
+```
+
+**Response `201 Created`:**
+
+```json theme={null}
+{
+  "id": "ta_01hx7d5...",
+  "userId": "usr_01hx2m7...",
+  "trainingModuleId": "tm_01hx6c4...",
+  "status": "assigned",
+  "dueDate": "2025-04-30",
+  "completedAt": null,
+  "notes": "Annual CIP-004 requirement. Personnel joined 2025-02-01.",
+  "facilities": [],
+  "createdAt": "2025-03-15T09:00:00Z",
+  "updatedAt": "2025-03-15T09:00:00Z"
+}
+```
+
+***
+
+### Sample: Mark a training assignment complete
+
+```http theme={null}
+POST /training-assignments/ta_01hx7d5.../complete
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "completedAt": "2025-04-10T14:15:00Z",
+  "score": 94,
+  "certificateReference": "CERT-2025-04-10-USR01"
+}
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "id": "ta_01hx7d5...",
+  "userId": "usr_01hx2m7...",
+  "trainingModuleId": "tm_01hx6c4...",
+  "status": "complete",
+  "dueDate": "2025-04-30",
+  "completedAt": "2025-04-10T14:15:00Z",
+  "score": 94,
+  "certificateReference": "CERT-2025-04-10-USR01"
+}
+```
+
+***
+
+### Sample: Scope an assignment to facilities
+
+```http theme={null}
+POST /training-assignments/ta_01hx7d5.../facilities
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "facilityIds": [
+    "fac_01ha3x2...",
+    "fac_02bc9d1..."
+  ]
+}
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "trainingAssignmentId": "ta_01hx7d5...",
+  "facilities": [
+    { "id": "fac_01ha3x2...", "name": "Substation Alpha" },
+    { "id": "fac_02bc9d1...", "name": "Substation Beta" }
+  ]
+}
+```
+
+***
+
+### Sample: Export training assignments
+
+```http theme={null}
+GET /training-assignments/export?format=csv&status=complete&moduleId=tm_01hx6c4...
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+The export endpoint returns a downloadable file containing all matching training assignment records. The response includes a `Content-Disposition: attachment` header. Use this endpoint to generate compliance documentation packages ahead of NERC audits.
+
+***
+
+## Training assignment status values
+
+| Status        | Meaning                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| `assigned`    | The assignment has been created but the trainee has not yet completed the module.                |
+| `in_progress` | The trainee has started the module in the linked LMS.                                            |
+| `complete`    | The trainee has successfully completed the module. A completion record with timestamp is stored. |
+| `overdue`     | The due date has passed and the assignment is not yet complete.                                  |
+| `waived`      | The assignment has been formally waived for this individual by an authorized approver.           |
+
+***
+
+## What you can build
+
+Once these endpoints are available, you will be able to:
+
+* **Sync completions from your LMS.** When your LMS records a course completion, POST the completion event to `POST /training-assignments/{id}/complete` in Raptor Comply in real time — no manual tracking.
+* **Automate onboarding workflows.** When a new user is created, automatically create the full set of required CIP-004 training assignments using `POST /training-assignments`, scoped to the facilities they will access.
+* **Generate audit-ready exports on demand.** Call `GET /training-assignments/export` before each compliance review to produce a complete training completion report without logging into the UI.
+* **Track expiring certifications.** Query `GET /training-assignments` filtered by `status=complete` and sort by `completedAt` to find personnel whose annual training will expire soon and trigger renewal assignments.
+* **Scope training precisely.** Use the facility scoping endpoints to add or remove facilities from an assignment as personnel responsibilities change, keeping your CIP-004 records accurate without recreating assignments from scratch.

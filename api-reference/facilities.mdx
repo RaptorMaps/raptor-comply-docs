@@ -1,0 +1,138 @@
+---
+title: "Facilities API — List and Retrieve NERC Facilities"
+description: "Use GET /facilities and GET /facilities/{id} to list and retrieve your NERC-registered facilities. Create, update, and delete operations are coming soon."
+---
+
+> Use GET /facilities and GET /facilities/{id} to list and retrieve your NERC-registered facilities. Create, update, and delete operations are coming soon.
+
+Facilities are the top-level structural objects in your Raptor Comply tenant. Each facility corresponds to a NERC-registered site — such as a substation, generating plant, or transmission station — that you've already classified inside the platform. Use these endpoints to read your facility inventory and integrate it into downstream tooling like CMDBs and asset management systems.
+
+<Note>
+  Every request to the Raptor Comply API requires two headers: **X-API-Key** (your API key) and **Organization** (your organization slug). See [Authentication](/authentication) for setup instructions.
+</Note>
+
+***
+
+## Available endpoints
+
+### List all facilities
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities`
+
+Returns an array of all facilities belonging to your organization. Use this endpoint to seed a downstream CMDB, build a facility picker in an internal tool, or audit the full list of sites registered in your Raptor Comply tenant.
+
+#### Request
+
+No path or query parameters are required. Include your authentication headers on every request.
+
+```bash theme={null}
+curl --request GET \
+  --url https://api.raptormaps.com/facilities \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Organization: your-org-slug'
+```
+
+#### Response
+
+Returns `200 OK` with a JSON array of facility objects.
+
+<ResponseField name="id" type="string">
+  Unique identifier for the facility, prefixed with `fac_`.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Human-readable name of the facility as configured in Raptor Comply.
+</ResponseField>
+
+<ResponseField name="organization_slug" type="string">
+  The slug of the organization that owns this facility. Matches the value you pass in the `Organization` header.
+</ResponseField>
+
+```json theme={null}
+[
+  {
+    "id": "fac_01HXY...",
+    "name": "South Plant Substation",
+    "organization_slug": "acme-utility"
+  }
+]
+```
+
+***
+
+### Get a single facility
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{id}`
+
+Returns a single facility by its unique identifier. Use this endpoint when you need to look up or verify the details of a specific site — for example, after resolving a facility ID from a cyber system or cyber asset record.
+
+#### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the facility, e.g. `fac_01HXY...`. You can obtain this value from the `id` field returned by `GET /facilities`.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request GET \
+  --url https://api.raptormaps.com/facilities/fac_01HXY... \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Organization: your-org-slug'
+```
+
+#### Response
+
+Returns `200 OK` with a single facility object.
+
+<ResponseField name="id" type="string">
+  Unique identifier for the facility.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Human-readable name of the facility.
+</ResponseField>
+
+<ResponseField name="organization_slug" type="string">
+  The slug of the organization that owns this facility.
+</ResponseField>
+
+```json theme={null}
+{
+  "id": "fac_01HXY...",
+  "name": "South Plant Substation",
+  "organization_slug": "acme-utility"
+}
+```
+
+***
+
+## Coming soon
+
+The following endpoints exist in the Raptor Comply API but are not yet available via API-key authentication. They are documented here so you can plan your integrations in advance. Subscribe to [release notes](#) to be notified when each batch becomes available.
+
+<Note>
+  The endpoints below are **coming soon** and are not yet accessible with your API key. Requests to these paths will not succeed. Check back for updates.
+</Note>
+
+### Create a facility
+
+<span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/facilities`
+
+**Operation:** `createFacility` — Creates a new facility in your Raptor Comply tenant.
+
+***
+
+### Update a facility
+
+<span style={{ background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>PATCH</span> `/facilities/{id}`
+
+**Operation:** `updateFacility` — Partially updates the properties of an existing facility.
+
+***
+
+### Delete a facility
+
+<span style={{ background: '#ef4444', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>DELETE</span> `/facilities/{id}`
+
+**Operation:** `deleteFacility` — Permanently removes a facility from your Raptor Comply tenant.

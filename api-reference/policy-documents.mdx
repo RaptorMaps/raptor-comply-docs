@@ -1,0 +1,177 @@
+---
+title: "Policy Documents API — NERC CIP Document Lifecycle"
+description: "Manage NERC CIP policy documents, track versions, control approval workflows, and attach supporting assets via the Raptor Comply API. Coming soon."
+---
+
+> Manage NERC CIP policy documents, track versions, control approval workflows, and attach supporting assets via the Raptor Comply API. Coming soon.
+
+Policy documents are the backbone of your NERC CIP compliance program. They represent the formal policies, procedures, and plans — such as your Physical Security Plan, Incident Response Plan, or BES Cyber System categorization procedures — that NERC requires registered entities to maintain, review, and keep current. Raptor Comply stores these documents with full lifecycle management: drafting, stakeholder review, formal approval, and audit-ready version history.
+
+When the Policy Documents API launches, you will be able to create and update documents programmatically, drive documents through the submit-and-approve workflow without touching the Raptor Comply UI, attach supporting assets, and pull version history directly into your own tooling or audit pipelines.
+
+<Note>
+  All endpoints on this page are coming soon. They exist in the Raptor Comply
+  platform but are not yet available via API key auth. Subscribe to release
+  notes to be notified when they launch.
+</Note>
+
+## Authentication
+
+Every request requires your API key and organization identifier as headers:
+
+```http theme={null}
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+All requests are made against the base URL `https://api.raptormaps.com`.
+
+***
+
+## Document lifecycle
+
+Policy documents in Raptor Comply move through a defined set of states that mirror real-world compliance review processes:
+
+1. **Draft** — You create a document (via `POST /policy-documents`) or upload an existing file (via `POST /policy-documents/upload`). When uploading a file, Raptor Comply parses and extracts its content in the background; you can monitor progress with `GET /policy-documents/processing-files` and then call `POST /policy-documents/create-from-processed` to promote the parsed file into a full document record. The document is editable and not yet under review.
+2. **Submitted** — You call `POST /policy-documents/{id}/submit` to signal that the document is ready for approval. Editing is locked pending review.
+3. **Approved** — A designated approver calls `POST /policy-documents/{id}/approve`. Raptor Comply records the approval timestamp and approver identity and snapshots a new version.
+4. **Reverted** — If an approved document needs revision, you call `POST /policy-documents/{id}/revert` to return it to Draft status. A new edit-and-submit cycle begins.
+
+Each approval creates an immutable version snapshot, giving you a complete, timestamped chain of custody for NERC audits.
+
+***
+
+## Versioning
+
+Every time a policy document is approved, Raptor Comply creates a new version record. You can list all historical versions, retrieve the latest approved version, or fetch any specific version by its number. This lets you compare what a document said at any point in time — critical when an auditor asks you to demonstrate what your policy said during a specific compliance period.
+
+***
+
+## Endpoint reference
+
+### Document management
+
+| Method   | Path                                      | Operation                           | Description                                                                                                                                                                                                                                        |
+| -------- | ----------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`    | `/policy-documents`                       | `listPolicyDocuments`               | Retrieve a paginated list of all policy documents in your organization.                                                                                                                                                                            |
+| `POST`   | `/policy-documents`                       | `createPolicyDocument`              | Create a new policy document record from a structured payload.                                                                                                                                                                                     |
+| `POST`   | `/policy-documents/upload`                | `uploadPolicyDocumentFile`          | Upload an existing file (PDF, DOCX) to create a new policy document.                                                                                                                                                                               |
+| `POST`   | `/policy-documents/create-from-processed` | `createPolicyDocumentFromProcessed` | Create a policy document from a file that has already completed the document processing pipeline. Use this after Raptor Comply has parsed and extracted content from an uploaded file and you are ready to promote it into a full document record. |
+| `GET`    | `/policy-documents/processing-files`      | `getProcessingFiles`                | List files currently moving through the document processing pipeline. Use this to check the status of uploaded documents that are being parsed and prepared before they become full policy document records.                                       |
+| `GET`    | `/policy-documents/{id}/with-sections`    | `getPolicyDocumentWithSections`     | Retrieve a document along with its ordered section content in a single call.                                                                                                                                                                       |
+| `PATCH`  | `/policy-documents/{id}`                  | `updatePolicyDocument`              | Update document metadata such as title, description, owner, or review date.                                                                                                                                                                        |
+| `DELETE` | `/policy-documents/{id}`                  | `deletePolicyDocument`              | Permanently delete a draft document. Approved documents cannot be deleted.                                                                                                                                                                         |
+
+### Assets and sections
+
+| Method  | Path                                      | Operation                    | Description                                                                                                   |
+| ------- | ----------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `PATCH` | `/policy-documents/{id}/assets`           | `updatePolicyDocumentAssets` | Attach or detach supporting file assets (e.g., diagrams, reference documents) linked to this policy document. |
+| `PATCH` | `/policy-documents/{id}/sections/reorder` | `reorderDocumentSections`    | Update the display order of sections within a document.                                                       |
+
+### Workflow actions
+
+| Method | Path                                    | Operation               | Description                                                                                                             |
+| ------ | --------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `POST` | `/policy-documents/{id}/submit`         | `submitPolicyDocument`  | Advance the document from Draft to Submitted, signaling it is ready for approval.                                       |
+| `POST` | `/policy-documents/{id}/approve`        | `approvePolicyDocument` | Approve the submitted document. Records approver identity, timestamps the approval, and creates a new version snapshot. |
+| `POST` | `/policy-documents/{id}/revert`         | `revertPolicyDocument`  | Return an approved document to Draft status so it can be revised and resubmitted.                                       |
+| `POST` | `/policy-documents/{id}/log-pdf-export` | `logPdfExport`          | Records that a PDF export of this document has been performed, capturing who exported it and when.                      |
+
+### Version history
+
+| Method | Path                                              | Operation                    | Description                                                              |
+| ------ | ------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------ |
+| `GET`  | `/policy-documents/{id}/versions`                 | `listDocumentVersions`       | List all versions of a document in reverse chronological order.          |
+| `GET`  | `/policy-documents/{id}/versions/latest`          | `getLatestDocumentVersion`   | Retrieve the most recently approved version of the document.             |
+| `GET`  | `/policy-documents/{id}/versions/{versionNumber}` | `getDocumentVersionByNumber` | Retrieve a specific historical version by its sequential version number. |
+
+***
+
+## Sample request and response shapes
+
+### Create a policy document
+
+```http theme={null}
+POST /policy-documents
+Content-Type: application/json
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+
+{
+  "title": "Physical Security Plan — Substation Alpha",
+  "documentTypeId": "dt_01hx3k9...",
+  "ownerId": "usr_01hx2m7...",
+  "reviewIntervalDays": 365,
+  "description": "Defines physical security controls for Substation Alpha BES Cyber Systems."
+}
+```
+
+**Response `201 Created`:**
+
+```json theme={null}
+{
+  "id": "pd_01hx5r2...",
+  "title": "Physical Security Plan — Substation Alpha",
+  "status": "draft",
+  "documentTypeId": "dt_01hx3k9...",
+  "ownerId": "usr_01hx2m7...",
+  "reviewIntervalDays": 365,
+  "createdAt": "2025-03-15T14:22:00Z",
+  "updatedAt": "2025-03-15T14:22:00Z"
+}
+```
+
+***
+
+### Submit a document for approval
+
+```http theme={null}
+POST /policy-documents/pd_01hx5r2.../submit
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "id": "pd_01hx5r2...",
+  "status": "submitted",
+  "submittedAt": "2025-03-16T09:00:00Z",
+  "submittedBy": "usr_01hx2m7..."
+}
+```
+
+***
+
+### Get the latest approved version
+
+```http theme={null}
+GET /policy-documents/pd_01hx5r2.../versions/latest
+X-API-Key: <your-api-key>
+X-Organization: <your-org-slug>
+```
+
+**Response `200 OK`:**
+
+```json theme={null}
+{
+  "versionNumber": 3,
+  "documentId": "pd_01hx5r2...",
+  "approvedAt": "2025-03-17T11:45:00Z",
+  "approvedBy": "usr_09ab4c1...",
+  "snapshotUrl": "https://storage.raptormaps.com/..."
+}
+```
+
+***
+
+## What you can build
+
+Once these endpoints are available, you will be able to:
+
+* **Sync documents from an external system.** Use `POST /policy-documents/upload` to push documents authored in your existing tools into Raptor Comply without manual uploads.
+* **Drive compliance calendars.** Use `GET /policy-documents` to list documents nearing their review date and trigger automated reminders or create follow-up tasks.
+* **Audit trail exports.** Use `GET /policy-documents/{id}/versions` to pull the full version history of any document and feed it into your audit evidence package.
+* **Automate approval notifications.** Poll `GET /policy-documents` filtered by `status=submitted` to detect documents awaiting approval and route notifications to your communication channels.

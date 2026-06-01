@@ -1,75 +1,105 @@
 ---
-title: Authentication
-description: How to authenticate to the Raptor Comply API
+title: "Raptor Comply API Authentication: Headers and Keys"
+description: "Every Raptor Comply API request requires two headers: X-API-Key and Organization. Learn how to obtain, use, and rotate your API credentials."
 ---
 
-Every request to the Raptor Comply API requires two headers:
+> Every Raptor Comply API request requires two headers: X-API-Key and Organization. Learn how to obtain, use, and rotate your API credentials.
 
-| Header | Value | Source |
-|---|---|---|
-| `X-API-Key` | Your API key | Generated in Raptor Comply by an organization admin |
-| `Organization` | Your organization slug | Set when your tenant was provisioned (also visible in your Raptor Comply URL) |
+Every request to the Raptor Comply API requires exactly two authentication headers: `X-API-Key` and `Organization`. Both must be present on every call — the API rejects requests that are missing either one. There are no cookies, no OAuth flows, and no session tokens; the two headers are the complete authentication model.
 
-Both are required on every request. The API rejects requests missing either header.
+| Header         | Value                                | Source                                                                  |
+| -------------- | ------------------------------------ | ----------------------------------------------------------------------- |
+| `X-API-Key`    | Your API key, beginning with `rmcp_` | Generated inside Raptor Comply by an Organization Admin                 |
+| `Organization` | Your organization slug               | Set when your tenant was provisioned; visible in your Raptor Comply URL |
 
 ## Getting an API key
 
-API keys are issued from inside Raptor Comply by a user with the Organization Admin role. Each key is scoped to a single organization and grants the same data access as the `api_user` role in that tenant's permission model.
+API keys are issued from the **Settings page ([https://app.raptorcomply.com/settings](https://app.raptorcomply.com/settings))** inside Raptor Comply by a user with the **Organization Admin** role. Each key is scoped to a single organization and grants access to read facilities, control centers, and cyber systems, and to perform full CRUD on cyber assets.
 
-If you don't yet have a key, ask your organization admin to generate one and share it with you through your usual secrets-handling process. Raptor Comply does not email keys.
+If you don't yet have a key, ask your organization admin to generate one and deliver it to you through your team's standard secrets-handling process. Raptor Comply does not email keys or display them after initial generation, so treat the moment of creation as your one opportunity to capture it.
 
-## Using the headers
+## Passing the headers
 
-```bash
+Include both headers on every request. Here is a complete example that lists your facilities:
+
+```bash theme={null}
 curl https://api.raptormaps.com/facilities \
   -H "X-API-Key: rmcp_xxxxxxxxxxxxxxxxxxxxxxxx" \
   -H "Organization: your-organization-slug"
 ```
 
-## Error responses
+Replace `rmcp_xxxxxxxxxxxxxxxxxxxxxxxx` with your actual API key and `your-organization-slug` with your organization's slug. For real usage, store these values as environment variables rather than hardcoding them - see the [Quickstart](/quickstart) for a working example using env vars.
 
-The API returns standard HTTP status codes. The four authentication-related failures share a consistent shape:
+## Finding your organization slug
 
-### `401 Unauthorized` — missing `X-API-Key` header
+Your organization slug was set when your Raptor Comply tenant was provisioned. You can also find it in your Raptor Comply application URL - it is the identifier that appears in the URL path after you log in. If you're unsure of your slug, your Organization Admin can confirm it.
 
-```json
-{
-  "error": "Unauthorized",
-  "message": "Missing X-API-Key header"
-}
-```
+## Authentication errors
 
-### `400 Bad Request` — missing `Organization` header
+All authentication failures return a JSON body with `error` and `message` fields. The four cases you may encounter are:
 
-```json
-{
-  "error": "Bad Request",
-  "message": "Missing Organization header"
-}
-```
+<AccordionGroup>
+  <Accordion title="401 - Missing X-API-Key header">
+    The request arrived without an `X-API-Key` header.
 
-### `401 Unauthorized` — invalid key
+    ```json theme={null}
+    {
+      "error": "Unauthorized",
+      "message": "Missing X-API-Key header"
+    }
+    ```
 
-```json
-{
-  "error": "Unauthorized",
-  "message": "Invalid API key"
-}
-```
+    **Fix:** Add the `X-API-Key` header to your request.
+  </Accordion>
 
-### `401 Unauthorized` — expired key
+  <Accordion title="400 - Missing Organization header">
+    The request arrived without an `Organization` header.
 
-```json
-{
-  "error": "Unauthorized",
-  "message": "API key has expired"
-}
-```
+    ```json theme={null}
+    {
+      "error": "Bad Request",
+      "message": "Missing Organization header"
+    }
+    ```
+
+    **Fix:** Add the `Organization` header with your organization slug.
+  </Accordion>
+
+  <Accordion title="401 - Invalid API key">
+    The `X-API-Key` value does not match any active key for the specified organization.
+
+    ```json theme={null}
+    {
+      "error": "Unauthorized",
+      "message": "Invalid API key"
+    }
+    ```
+
+    **Fix:** Verify you've copied the key correctly. If you recently rotated keys, confirm you're using the new one and that the old one hasn't already been revoked.
+  </Accordion>
+
+  <Accordion title="401 - Expired API key">
+    The API key was valid but has passed its expiration date.
+
+    ```json theme={null}
+    {
+      "error": "Unauthorized",
+      "message": "API key has expired"
+    }
+    ```
+
+    **Fix:** Ask your Organization Admin to generate a new key. See [Key rotation](#key-rotation) below.
+  </Accordion>
+</AccordionGroup>
 
 ## Key rotation
 
-Treat your API key like a password. Rotate it on a regular cadence (we recommend annually at minimum) and immediately if it has been exposed. Generating a new key in Raptor Comply does not automatically revoke the old one: your admin must explicitly revoke the prior key after the new one is in use.
+Treat your API key like a password:
 
-## Next step
+* **Rotate on a regular cadence.** We recommend at least annually, or more frequently if your security policy requires it.
+* **Rotate immediately** if a key has been exposed - committed to source control, logged in plaintext, or otherwise leaked.
+* **Revocation is explicit.** Generating a new key in Raptor Comply does **not** automatically revoke the old one. Your Organization Admin must explicitly revoke the prior key after the new one is deployed and confirmed working. Until revocation, both keys are valid simultaneously, which gives you a zero-downtime rotation window.
 
-- [Quickstart](/quickstart) — make your first request.
+<Tip>
+  Ready to make your first request? Head to the [Quickstart](/quickstart) to list your facilities using curl, Node.js, or Python in under five minutes.
+</Tip>

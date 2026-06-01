@@ -1,0 +1,186 @@
+---
+title: "Raptor Comply API Error Codes and Response Reference"
+description: "Raptor Comply returns standard HTTP status codes. Every error response includes a machine-readable JSON body with error and message fields."
+---
+
+> Raptor Comply returns standard HTTP status codes. Every error response includes a machine-readable JSON body with error and message fields.
+
+The Raptor Comply API uses standard HTTP status codes to communicate the outcome of every request. Codes in the `2xx` range indicate success. Codes in the `4xx` range mean your request could not be fulfilled as sent — check your headers, path, and request body. Codes in the `5xx` range indicate an unexpected problem on our end. Every error response includes a consistent JSON body so you can programmatically detect and handle failures without parsing the response text.
+
+## Error response schema
+
+Every error response — regardless of status code — follows this shape:
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "Invalid API key"
+}
+```
+
+<ResponseField name="error" type="string" required>
+  A short, machine-readable code identifying the error type. Use this field for programmatic error handling and conditional logic in your integration.
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  A human-readable sentence describing what went wrong. This field is intended to help you debug quickly; its exact wording may change between releases, so do not match on it programmatically.
+</ResponseField>
+
+## 4xx Client errors
+
+These errors originate in your request. Fix the issue described in the `message` field and retry.
+
+### 400 Bad Request
+
+Your request was syntactically valid but was missing a required element that cannot be defaulted.
+
+**Common cause:** The `Organization` header is absent.
+
+```json theme={null}
+{
+  "error": "Bad Request",
+  "message": "Missing Organization header"
+}
+```
+
+### 401 Unauthorized
+
+The API could not authenticate you. This happens when the `X-API-Key` header is missing, the key value is not recognized, or the key has passed its expiry date.
+
+**Common causes:**
+
+* `X-API-Key` header not included in the request
+* Key value typo or copied with extra whitespace
+* Key has expired and has not been rotated
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "Missing X-API-Key header"
+}
+```
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "Invalid API key"
+}
+```
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "API key has expired"
+}
+```
+
+### 403 Forbidden
+
+Your API key is valid, but it does not have permission to perform the requested operation on the specified resource. API keys in Raptor Comply are scoped to a single organization and granted the `api_user` role in that tenant's permission model. If you believe you should have access, contact your organization admin to verify your key's permissions.
+
+```json theme={null}
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to perform this action"
+}
+```
+
+### 404 Not Found
+
+The resource you requested does not exist, or it exists in a different organization than the one identified by your `Organization` header. Double-check the ID in the path and confirm it belongs to your tenant.
+
+```json theme={null}
+{
+  "error": "Not Found",
+  "message": "Resource not found"
+}
+```
+
+### 422 Unprocessable Entity
+
+The request was well-formed and authenticated, but the body failed validation. A required field may be missing, a field value may be the wrong type, or a referenced ID may not exist in your organization. The `message` field will identify which part of the payload was rejected.
+
+```json theme={null}
+{
+  "error": "Unprocessable Entity",
+  "message": "Field 'cyberSystemId' is required"
+}
+```
+
+### 429 Too Many Requests
+
+You have exceeded the API's rate limit. Slow down your request cadence and retry after a delay. See [Rate limiting](#rate-limiting) below for the recommended retry strategy.
+
+```json theme={null}
+{
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded. Please retry after a short delay."
+}
+```
+
+## 5xx Server errors
+
+These errors originate in Raptor Comply infrastructure. You do not need to change your request. Retry with exponential backoff; if the error persists, contact Raptor Comply support.
+
+### 500 Internal Server Error
+
+An unexpected error occurred on our end while processing your request. This is not caused by anything in your request payload or headers. Raptor Comply engineers are automatically alerted to elevated `500` rates.
+
+```json theme={null}
+{
+  "error": "Internal Server Error",
+  "message": "An unexpected error occurred. Please try again later."
+}
+```
+
+## Authentication errors in detail
+
+The four authentication-specific failures each have an exact, stable JSON body you can match against the `error` and `message` fields in your error-handling logic:
+
+**Missing `X-API-Key` header** — `401 Unauthorized`
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "Missing X-API-Key header"
+}
+```
+
+**Missing `Organization` header** — `400 Bad Request`
+
+```json theme={null}
+{
+  "error": "Bad Request",
+  "message": "Missing Organization header"
+}
+```
+
+**Invalid API key** — `401 Unauthorized`
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "Invalid API key"
+}
+```
+
+**Expired API key** — `401 Unauthorized`
+
+```json theme={null}
+{
+  "error": "Unauthorized",
+  "message": "API key has expired"
+}
+```
+
+If you receive an expired-key error, ask your organization admin to generate a new key in Raptor Comply and explicitly revoke the old one. Raptor Comply does not automatically revoke prior keys when a new one is issued. For full details on key rotation, see [Authentication](/authentication).
+
+## Rate limiting
+
+The Raptor Comply API enforces rate limits to ensure reliable performance for all tenants. If you receive a `429 Too Many Requests` response, your integration must back off before retrying. Use **exponential backoff**: wait a base interval (for example, one second) after the first `429`, then double the wait time on each subsequent `429` received for the same request, up to a reasonable ceiling (for example, 60 seconds). Add a small random jitter to avoid synchronized retry storms if you run multiple workers.
+
+Do not simply loop and retry immediately — doing so will extend the period during which your requests are rate-limited.
+
+<Tip>
+  For complete retry patterns, circuit-breaker strategies, and integration best practices — including code examples in Python, TypeScript, and Bash — see the [Error Handling Guide](/guides/error-handling).
+</Tip>

@@ -1,0 +1,75 @@
+---
+title: "Access Control API — Resource Permission Management"
+description: "Grant and revoke resource-level access for Raptor Comply users. Query approved access items and manage fine-grained permissions. Coming soon."
+---
+
+> Grant and revoke resource-level access for Raptor Comply users. Query approved access items and manage fine-grained permissions. Coming soon.
+
+The Access Control API gives you fine-grained, resource-level permission management for every member of your organization. Rather than relying solely on broad role assignments, access control items let you bind a specific user to a specific resource at a defined access level — giving you precise control over who can see or act on any given asset, facility, document, or other object in Raptor Comply. When these endpoints are available, you'll be able to programmatically grant access as part of an onboarding workflow, revoke it when someone changes teams or leaves the organization, and query the full set of approved items for any user.
+
+<Note>
+  All endpoints on this page are **coming soon**. They exist in the Raptor Comply internal API but are not yet exposed via API-key authentication. Subscribe to our release notes to be notified as each endpoint becomes available.
+</Note>
+
+***
+
+## Access control items
+
+An **access control item** is a permission record that links three things together:
+
+* **A user** — the Raptor Comply account the permission applies to
+* **A resource** — the specific object being protected (for example, a facility, a cyber system, or a policy document)
+* **An access level** — the type of action the user is permitted to perform on that resource (for example, read or edit)
+
+You manage access control items through the standard CRUD endpoints below. Creating an item does not itself grant access to the Raptor Comply application — use the dedicated grant endpoint described in the next section for that purpose.
+
+***
+
+## Granting and revoking access
+
+Once an access control item exists, you use the grant and revoke endpoints to activate or deactivate it for a specific user. This separation lets you pre-configure permission records and then flip them on or off as needed — for example, to temporarily expand a user's access during an audit window and revoke it once the window closes.
+
+**`POST /access-control/user/{userId}/grant`** — Grants the user identified by `userId` the access defined in the associated access control item. The user gains access to the target resource immediately.
+
+**`POST /access-control/user/{userId}/revoke`** — Revokes the user's access to the target resource. Existing sessions are not affected instantaneously, but subsequent permission checks return a denial.
+
+Use these endpoints as part of a broader identity lifecycle workflow: when a user is onboarded to a project or facility, call grant; when they rotate off, call revoke. This keeps your access posture current without requiring manual changes in the Raptor Comply UI.
+
+***
+
+## Querying approved access
+
+**`GET /access-control/user/{userId}`** — Returns the list of access control item IDs for which the specified user currently has approved access. Use this endpoint to audit what a given user can reach before making changes, or to drive a dashboard that shows each member's current permission set.
+
+***
+
+## Endpoints
+
+| Method   | Path                                   | Operation                           | Status      |
+| -------- | -------------------------------------- | ----------------------------------- | ----------- |
+| `GET`    | `/access-control`                      | listAccessControls                  | Coming soon |
+| `POST`   | `/access-control`                      | createAccessControl                 | Coming soon |
+| `GET`    | `/access-control/{id}`                 | getAccessControl                    | Coming soon |
+| `PUT`    | `/access-control/{id}`                 | updateAccessControl                 | Coming soon |
+| `DELETE` | `/access-control/{id}`                 | deleteAccessControl                 | Coming soon |
+| `GET`    | `/access-control/user/{userId}`        | getUserApprovedAccessControlItemIds | Coming soon |
+| `POST`   | `/access-control/user/{userId}/grant`  | grantRaptorComplyAccess             | Coming soon |
+| `POST`   | `/access-control/user/{userId}/revoke` | revokeRaptorComplyAccess            | Coming soon |
+
+### Endpoint details
+
+**`GET /access-control`** — Returns a paginated list of all access control items defined for your organization. Use this to get a full picture of your permission configuration.
+
+**`POST /access-control`** — Creates a new access control item. Specify the target user, resource, and access level in the request body. Creating the item does not automatically grant access — call the grant endpoint to activate it.
+
+**`GET /access-control/{id}`** — Fetches a single access control item by its ID, including its current status and associated metadata.
+
+**`PUT /access-control/{id}`** — Replaces the full definition of an existing access control item. Use this when the resource or access level for a permission record needs to change entirely.
+
+**`DELETE /access-control/{id}`** — Permanently removes an access control item. Any active access grant tied to this item is also removed. This action cannot be undone.
+
+**`GET /access-control/user/{userId}`** — Returns all currently approved access control item IDs for the specified user. Use this to audit or display a user's active permissions.
+
+**`POST /access-control/user/{userId}/grant`** — Activates access for the specified user based on an existing access control item.
+
+**`POST /access-control/user/{userId}/revoke`** — Deactivates access for the specified user, removing their permission to the associated resource.

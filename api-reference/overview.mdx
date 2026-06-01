@@ -1,0 +1,128 @@
+---
+title: "Raptor Comply REST API Overview and Reference Guide"
+description: "Access NERC OT compliance data with the Raptor Comply REST API. All requests use HTTPS, return JSON, and require X-API-Key and Organization headers."
+---
+
+> Access NERC OT compliance data with the Raptor Comply REST API. All requests use HTTPS, return JSON, and require X-API-Key and Organization headers.
+
+The Raptor Comply REST API gives you programmatic access to your NERC OT compliance data — facilities, control centers, cyber systems, cyber assets, and more. Every request travels over HTTPS to the base URL `https://api.raptormaps.com` and every response is returned as JSON. There is no separate XML, CSV, or binary transport layer; if you need a CSV export, use the Raptor Comply web application.
+
+## Base URL
+
+```
+https://api.raptormaps.com
+```
+
+All endpoint paths are relative to this base URL. For example, to list your facilities you call `GET https://api.raptormaps.com/facilities`.
+
+## Authentication
+
+Every request requires two headers:
+
+| Header         | What to send                                                          |
+| -------------- | --------------------------------------------------------------------- |
+| `X-API-Key`    | Your API key, generated inside Raptor Comply by an organization admin |
+| `Organization` | Your organization slug, visible in your Raptor Comply tenant URL      |
+
+The API rejects any request that is missing either header. For step-by-step instructions on generating a key and finding your organization slug, see [Authentication](/authentication).
+
+## Request format
+
+Send all request bodies as JSON and include the `Content-Type: application/json` header on every `POST` and `PATCH` request. `GET` and `DELETE` requests do not have a body and do not require `Content-Type`.
+
+```bash theme={null}
+# Example POST with a JSON body
+curl -X POST https://api.raptormaps.com/cyber-assets \
+  -H "X-API-Key: rmcp_xxxxxxxxxxxxxxxxxxxxxxxx" \
+  -H "Organization: your-organization-slug" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Historian Server 01", "cyberSystemId": "cs_abc123"}'
+```
+
+## Response format
+
+All responses are JSON — either a single object or an array of objects. A successful request returns HTTP `200`. Any non-`2xx` status code indicates an error; see [Errors](/api-reference/errors) for the full error schema and code reference.
+
+```json theme={null}
+// Single resource
+{ "id": "ca_xyz789", "name": "Historian Server 01", ... }
+
+// Collection
+[{ "id": "fac_001", "name": "Plant A" }, { "id": "fac_002", "name": "Plant B" }]
+```
+
+## Available resources
+
+The table below shows every resource group in Raptor Comply and its current API availability. You can call **Available** endpoints today using your API key. **Coming soon** endpoints exist within the Raptor Comply platform but are not yet accessible via API key authentication.
+
+| Resource         | Available Operations            | Status      |
+| ---------------- | ------------------------------- | ----------- |
+| Facilities       | GET list, GET by ID             | Available   |
+| Control Centers  | GET list, GET by ID             | Available   |
+| Cyber Systems    | GET list, GET by ID             | Available   |
+| Cyber Assets     | Full CRUD                       | Available   |
+| Policy Documents | Create, read, update, lifecycle | Coming soon |
+| Evidence         | Create, read, delete            | Coming soon |
+| Tasks            | Full CRUD, bulk create          | Coming soon |
+| Training         | Modules and assignments         | Coming soon |
+| Users            | List, create, update            | Coming soon |
+| Access Control   | Grant, revoke, list             | Coming soon |
+| Activity         | Audit log                       | Coming soon |
+
+<Note>
+  Endpoints marked **Coming soon** exist in the Raptor Comply platform but are not yet accessible via API key auth. Subscribe to release notes to be notified as they become available.
+</Note>
+
+## Versioning
+
+The API is currently on **v1**. There is no version prefix in the URL — you call `/facilities`, not `/v1/facilities`. When breaking changes are necessary, Raptor Comply will communicate them with advance notice so you have time to update your integration before any change takes effect. Non-breaking additions (new fields, new endpoints) may be made at any time without prior notice.
+
+***
+
+## Explore by resource
+
+<CardGroup cols={2}>
+  <Card title="Facilities" icon="building" href="/api-reference/facilities">
+    Read the facilities registered in your Raptor Comply tenant.
+  </Card>
+
+  <Card title="Control Centers" icon="tower-broadcast" href="/api-reference/control-centers">
+    Read control centers and their associated facilities.
+  </Card>
+
+  <Card title="Cyber Systems" icon="microchip" href="/api-reference/cyber-systems">
+    Read the cyber systems scoped to your facilities and control centers.
+  </Card>
+
+  <Card title="Cyber Assets" icon="server" href="/api-reference/cyber-assets">
+    Create, read, update, and delete cyber assets to keep your CMDB in sync.
+  </Card>
+
+  <Card title="Policy Documents" icon="file-lines" href="/api-reference/policy-documents">
+    Manage policy documents through their full create-to-approve lifecycle. Coming soon.
+  </Card>
+
+  <Card title="Evidence" icon="paperclip" href="/api-reference/evidence">
+    Attach, retrieve, and remove evidence records linked to compliance resources. Coming soon.
+  </Card>
+
+  <Card title="Tasks" icon="list-check" href="/api-reference/tasks">
+    Create and manage compliance tasks, including bulk creation. Coming soon.
+  </Card>
+
+  <Card title="Training" icon="graduation-cap" href="/api-reference/training">
+    Administer training modules and track assignment completion. Coming soon.
+  </Card>
+
+  <Card title="Users" icon="users" href="/api-reference/users">
+    List, provision, and update users in your organization. Coming soon.
+  </Card>
+
+  <Card title="Access Control" icon="shield" href="/api-reference/access-control">
+    Grant, revoke, and audit access to Raptor Comply resources. Coming soon.
+  </Card>
+
+  <Card title="Activity" icon="clock-rotate-left" href="/api-reference/activity">
+    Query the audit log for a full history of changes in your tenant. Coming soon.
+  </Card>
+</CardGroup>
