@@ -1,0 +1,30 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Raptor Comply",
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#0E7C66",
+    "light": "#0E7C66",
+    "dark": "#0A5A4B"
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@raptormaps.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Sign In",
+    "url": "https://app.raptormaps.com"
+  },
+  "anchors": [],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": ["introduction", "authentication", "quickstart"]
+    }
+  ],
+  "footerSocials": {
+    "linkedin": "https://www.linkedin.com/company/raptor-maps"
+  }
+}

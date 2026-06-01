@@ -1,0 +1,75 @@
+---
+title: Authentication
+description: How to authenticate to the Raptor Comply API
+---
+
+Every request to the Raptor Comply API requires two headers:
+
+| Header | Value | Source |
+|---|---|---|
+| `X-API-Key` | Your API key | Generated in Raptor Comply by an organization admin |
+| `Organization` | Your organization slug | Set when your tenant was provisioned (also visible in your Raptor Comply URL) |
+
+Both are required on every request. The API rejects requests missing either header.
+
+## Getting an API key
+
+API keys are issued from inside Raptor Comply by a user with the Organization Admin role. Each key is scoped to a single organization and grants the same data access as the `api_user` role in that tenant's permission model.
+
+If you don't yet have a key, ask your organization admin to generate one and share it with you through your usual secrets-handling process. Raptor Comply does not email keys.
+
+## Using the headers
+
+```bash
+curl https://api.raptormaps.com/facilities \
+  -H "X-API-Key: rmcp_xxxxxxxxxxxxxxxxxxxxxxxx" \
+  -H "Organization: your-organization-slug"
+```
+
+## Error responses
+
+The API returns standard HTTP status codes. The four authentication-related failures share a consistent shape:
+
+### `401 Unauthorized` — missing `X-API-Key` header
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Missing X-API-Key header"
+}
+```
+
+### `400 Bad Request` — missing `Organization` header
+
+```json
+{
+  "error": "Bad Request",
+  "message": "Missing Organization header"
+}
+```
+
+### `401 Unauthorized` — invalid key
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Invalid API key"
+}
+```
+
+### `401 Unauthorized` — expired key
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "API key has expired"
+}
+```
+
+## Key rotation
+
+Treat your API key like a password. Rotate it on a regular cadence (we recommend annually at minimum) and immediately if it has been exposed. Generating a new key in Raptor Comply does not automatically revoke the old one: your admin must explicitly revoke the prior key after the new one is in use.
+
+## Next step
+
+- [Quickstart](/quickstart) — make your first request.

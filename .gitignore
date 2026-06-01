@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+.next/
+.mintlify-cache/
+.env
+.env.local
+.vscode/
+.idea/

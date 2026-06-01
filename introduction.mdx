@@ -1,0 +1,32 @@
+---
+title: Welcome
+description: Raptor Comply API for NERC owners and operators
+---
+
+[Raptor Comply](https://raptorcomply.com) is a NERC OT compliance platform covering CIP and O&P standards. This API gives NERC owners and operators (GO, GOP, TO, TOP) programmatic access to their compliance data so it can flow into CMDBs, CMMSs, ITSM systems, SIEMs, and any other internal tooling.
+
+<Note>
+  Full API reference and try-it-now playground arriving with our next release. Until
+  then, see [Authentication](/authentication) and [Quickstart](/quickstart) for
+  header setup and a runnable example.
+</Note>
+
+## What you can do
+
+| Resource | Access |
+|---|---|
+| **Facilities** | Read |
+| **Control Centers** | Read |
+| **Cyber Systems** | Read |
+| **Cyber Assets** | Read, create, update, delete |
+
+The surface is intentionally narrow. Read access covers the structural objects you've already classified in Raptor Comply. Cyber asset CRUD is full so you can keep your downstream CMDB synced as assets are added, retired, or reclassified.
+
+## Who this is for
+
+This API is for the people who own the data in your Raptor Comply tenant: compliance leads, OT engineers, and the integration developers building bridges between Raptor Comply and the rest of your operations stack. If you're a vendor working with Raptor Comply on behalf of a customer, you'll need API credentials scoped to their organization.
+
+## Next steps
+
+- [Authentication](/authentication) — how to get an API key and pass the two required headers.
+- [Quickstart](/quickstart) — list your facilities in one curl command.
