@@ -5,7 +5,7 @@ description: "Access NERC OT compliance data with the Raptor Comply REST API. Al
 
 > Access NERC OT compliance data with the Raptor Comply REST API. All requests use HTTPS, return JSON, and require an X-API-Key header.
 
-The Raptor Comply REST API gives you programmatic access to your NERC OT compliance data — facilities, control centers, cyber systems, cyber assets, and more. Every request travels over HTTPS to the base URL `https://api.raptormaps.com` and every response is returned as JSON. There is no separate XML, CSV, or binary transport layer; if you need a CSV export, use the Raptor Comply web application.
+The Raptor Comply REST API gives you programmatic access to your NERC OT compliance data - facilities, control centers, cyber systems, cyber assets, and more. Every request travels over HTTPS to the base URL `https://api.raptormaps.com` and every response is returned as JSON. There is no separate XML, CSV, or binary transport layer; if you need a CSV export, use the Raptor Comply web application.
 
 ## Base URL
 
@@ -39,7 +39,7 @@ curl -X POST https://api.raptormaps.com/cyber-assets \
 
 ## Response format
 
-All responses are JSON — either a single object or an array of objects. A successful request returns HTTP `200`. Any non-`2xx` status code indicates an error; see [Errors](/api-reference/errors) for the full error schema and code reference.
+All responses are JSON - either a single object or an array of objects. A successful request returns HTTP `200`. Any non-`2xx` status code indicates an error; see [Errors](/api-reference/errors) for the full error schema and code reference.
 
 ```json theme={null}
 // Single resource
@@ -73,7 +73,7 @@ The table below shows every resource group in Raptor Comply and its current API 
 
 ## Versioning
 
-The API is currently on **v1**. There is no version prefix in the URL — you call `/facilities`, not `/v1/facilities`. When breaking changes are necessary, Raptor Comply will communicate them with advance notice so you have time to update your integration before any change takes effect. Non-breaking additions (new fields, new endpoints) may be made at any time without prior notice.
+The API is currently on **v1**. There is no version prefix in the URL - you call `/facilities`, not `/v1/facilities`. When breaking changes are necessary, Raptor Comply will communicate them with advance notice so you have time to update your integration before any change takes effect. Non-breaking additions (new fields, new endpoints) may be made at any time without prior notice.
 
 ***
 

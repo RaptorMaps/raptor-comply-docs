@@ -1,5 +1,5 @@
 ---
-title: "Cyber Systems API — List and Retrieve BES Cyber Systems"
+title: "Cyber Systems API - List and Retrieve BES Cyber Systems"
 description: "Use GET /cyber-systems and GET /cyber-systems/{id} to read your BES Cyber Systems. Filtering by facility or control center is coming soon."
 ---
 
@@ -19,7 +19,7 @@ BES Cyber Systems (BCS) are the logical groupings of cyber assets that perform o
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-systems`
 
-Returns an array of all BES Cyber Systems belonging to your organization. Use this endpoint to load your full BCS inventory — for example, to pre-populate a system picker, reconcile against a CMDB, or feed a compliance dashboard.
+Returns an array of all BES Cyber Systems belonging to your organization. Use this endpoint to load your full BCS inventory - for example, to pre-populate a system picker, reconcile against a CMDB, or feed a compliance dashboard.
 
 #### Request
 
@@ -68,7 +68,7 @@ Returns `200 OK` with a JSON array of cyber system objects.
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-systems/{id}`
 
-Returns a single BES Cyber System by its unique identifier. Use this endpoint to resolve a specific BCS — for example, after finding a `cyber_system_id` on a cyber asset record and needing the full system context.
+Returns a single BES Cyber System by its unique identifier. Use this endpoint to resolve a specific BCS - for example, after finding a `cyber_system_id` on a cyber asset record and needing the full system context.
 
 #### Path parameters
 
@@ -127,7 +127,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/cyber-systems`
 
-**Operation:** `createCyberSystem` — Creates a new BES Cyber System in your Raptor Comply tenant.
+**Operation:** `createCyberSystem` - Creates a new BES Cyber System in your Raptor Comply tenant.
 
 ***
 
@@ -135,7 +135,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>PATCH</span> `/cyber-systems/{id}`
 
-**Operation:** `updateCyberSystem` — Partially updates the properties of an existing BES Cyber System.
+**Operation:** `updateCyberSystem` - Partially updates the properties of an existing BES Cyber System.
 
 ***
 
@@ -143,7 +143,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#ef4444', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>DELETE</span> `/cyber-systems/{id}`
 
-**Operation:** `deleteCyberSystem` — Permanently removes a BES Cyber System from your Raptor Comply tenant.
+**Operation:** `deleteCyberSystem` - Permanently removes a BES Cyber System from your Raptor Comply tenant.
 
 ***
 
@@ -151,7 +151,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/cyber-systems`
 
-**Operation:** `getCyberSystemsByFacility` — Returns all BES Cyber Systems associated with the specified facility. Useful for scoped queries when you only need the BCS inventory for a single site.
+**Operation:** `getCyberSystemsByFacility` - Returns all BES Cyber Systems associated with the specified facility. Useful for scoped queries when you only need the BCS inventory for a single site.
 
 ***
 
@@ -159,4 +159,4 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/cyber-systems`
 
-**Operation:** `getCyberSystemsByControlCenter` — Returns all BES Cyber Systems associated with the specified control center.
+**Operation:** `getCyberSystemsByControlCenter` - Returns all BES Cyber Systems associated with the specified control center.

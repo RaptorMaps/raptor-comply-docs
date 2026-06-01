@@ -1,11 +1,11 @@
 ---
-title: "Control Centers API — List and Retrieve Control Centers"
+title: "Control Centers API - List and Retrieve Control Centers"
 description: "Use GET /control-centers and GET /control-centers/{id} to access your NERC control centers. Assignment and lifecycle operations are coming soon."
 ---
 
 > Use GET /control-centers and GET /control-centers/{id} to access your NERC control centers. Assignment and lifecycle operations are coming soon.
 
-Control centers represent the operational hubs — such as energy management system (EMS) sites or transmission control rooms — that you've registered in Raptor Comply. They sit alongside facilities in your organizational hierarchy and are used to group and classify BES Cyber Systems for NERC CIP compliance purposes. Use these endpoints to read your control center inventory and integrate it with upstream data sources.
+Control centers represent the operational hubs - such as energy management system (EMS) sites or transmission control rooms - that you've registered in Raptor Comply. They sit alongside facilities in your organizational hierarchy and are used to group and classify BES Cyber Systems for NERC CIP compliance purposes. Use these endpoints to read your control center inventory and integrate it with upstream data sources.
 
 <Note>
   Every request to the Raptor Comply API requires the **X-API-Key** header. See [Authentication](/authentication) for setup instructions.
@@ -63,7 +63,7 @@ Returns `200 OK` with a JSON array of control center objects.
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{id}`
 
-Returns a single control center by its unique identifier. Use this endpoint to look up a specific operational hub — for example, after resolving a control center ID from a cyber system record or an incoming webhook payload.
+Returns a single control center by its unique identifier. Use this endpoint to look up a specific operational hub - for example, after resolving a control center ID from a cyber system record or an incoming webhook payload.
 
 #### Path parameters
 
@@ -117,7 +117,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/control-centers`
 
-**Operation:** `createControlCenter` — Creates a new control center in your Raptor Comply tenant.
+**Operation:** `createControlCenter` - Creates a new control center in your Raptor Comply tenant.
 
 ***
 
@@ -125,7 +125,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>PUT</span> `/control-centers/{id}`
 
-**Operation:** `updateControlCenter` — Replaces the properties of an existing control center with a full updated representation.
+**Operation:** `updateControlCenter` - Replaces the properties of an existing control center with a full updated representation.
 
 ***
 
@@ -133,7 +133,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#ef4444', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>DELETE</span> `/control-centers/{id}`
 
-**Operation:** `deleteControlCenter` — Permanently removes a control center from your Raptor Comply tenant.
+**Operation:** `deleteControlCenter` - Permanently removes a control center from your Raptor Comply tenant.
 
 ***
 
@@ -141,7 +141,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{id}/facilities`
 
-**Operation:** `getControlCenterFacilities` — Returns all facilities assigned to the specified control center.
+**Operation:** `getControlCenterFacilities` - Returns all facilities assigned to the specified control center.
 
 ***
 
@@ -149,7 +149,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/control-centers/{id}/assign-facilities`
 
-**Operation:** `assignFacilitiesToControlCenter` — Associates one or more facilities with the specified control center.
+**Operation:** `assignFacilitiesToControlCenter` - Associates one or more facilities with the specified control center.
 
 ***
 
@@ -157,7 +157,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/control-centers/{id}/unassign-facilities`
 
-**Operation:** `unassignFacilitiesFromControlCenter` — Removes the association between one or more facilities and the specified control center.
+**Operation:** `unassignFacilitiesFromControlCenter` - Removes the association between one or more facilities and the specified control center.
 
 ***
 
@@ -165,4 +165,4 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/control-centers/{id}/preview-impact`
 
-**Operation:** `previewControlCenterImpact` — Returns a dry-run assessment of how a proposed change to the specified control center would affect associated facilities, cyber systems, and BES impact ratings. Use this before committing a structural change to understand its downstream compliance implications.
+**Operation:** `previewControlCenterImpact` - Returns a dry-run assessment of how a proposed change to the specified control center would affect associated facilities, cyber systems, and BES impact ratings. Use this before committing a structural change to understand its downstream compliance implications.

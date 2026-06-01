@@ -19,9 +19,9 @@ Every API key in Raptor Comply carries `api_user` role-level access, scoped to a
 | **Read all control centers**  | `GET /control-centers`, `GET /control-centers/{id}`                                                                                               |
 | **Read all cyber systems**    | `GET /cyber-systems`, `GET /cyber-systems/{id}`                                                                                                   |
 | **Full CRUD on cyber assets** | `GET`, `POST`, `PATCH`, and `DELETE` on `/cyber-assets` and `/cyber-assets/{id}`                                                                  |
-| **Access compliance data**    | Policy documents, evidence, tasks, and training endpoints are rolling out — see [API Reference](/api-reference/overview) for current availability |
+| **Access compliance data**    | Policy documents, evidence, tasks, and training endpoints are rolling out - see [API Reference](/api-reference/overview) for current availability |
 
-The read access to facilities, control centers, and cyber systems covers the full organization — you can retrieve every record in the tenant, not just a subset. This makes it straightforward to build sync jobs that mirror your Raptor Comply hierarchy into a CMDB or ITSM system.
+The read access to facilities, control centers, and cyber systems covers the full organization - you can retrieve every record in the tenant, not just a subset. This makes it straightforward to build sync jobs that mirror your Raptor Comply hierarchy into a CMDB or ITSM system.
 
 ## What api\_user cannot do
 
@@ -41,8 +41,8 @@ If your integration requires these capabilities, contact Raptor Comply support t
 Each API key is tied to exactly one organization at the time it is generated. The key:
 
 * **Cannot** be used to access any other tenant, regardless of which headers you pass
-* **Does not expire on a set schedule** — keys remain valid until explicitly revoked by an admin
-* **Does not share a session** with the admin who generated it — the key's permissions are fixed at the `api_user` role and are not affected by changes to that admin's own account
+* **Does not expire on a set schedule** - keys remain valid until explicitly revoked by an admin
+* **Does not share a session** with the admin who generated it - the key's permissions are fixed at the `api_user` role and are not affected by changes to that admin's own account
 
 Because keys do not auto-expire, treat them like long-lived credentials and include key rotation in your security policy. Raptor Comply recommends rotating API keys at least annually and immediately after any suspected exposure.
 
@@ -59,13 +59,13 @@ Only users with the **Organization Admin** role can generate and revoke API keys
 **To revoke a key:**
 
 1. The Organization Admin must explicitly revoke the key inside Raptor Comply.
-2. Generating a new key does **not** automatically revoke the previous one — both keys remain valid until the old one is manually revoked.
+2. Generating a new key does **not** automatically revoke the previous one - both keys remain valid until the old one is manually revoked.
 3. After generating a replacement, update your integration to use the new key, then confirm the old key is revoked.
 
 This means you can rotate keys with zero downtime: generate the new key, deploy the updated credential, verify it works, then revoke the old key.
 
 ## Coming soon: granular access control
 
-Today, all API keys carry the same `api_user` permission set. The `/access-control` endpoints — currently in development — will introduce finer-grained access control, allowing admins to restrict specific keys or users to subsets of facilities, cyber systems, or operations. When this feature is available, you will be able to model least-privilege access patterns directly in Raptor Comply rather than enforcing them solely in your integration layer.
+Today, all API keys carry the same `api_user` permission set. The `/access-control` endpoints - currently in development - will introduce finer-grained access control, allowing admins to restrict specific keys or users to subsets of facilities, cyber systems, or operations. When this feature is available, you will be able to model least-privilege access patterns directly in Raptor Comply rather than enforcing them solely in your integration layer.
 
 See the [API Reference](/api-reference/overview) for the current status of access control endpoints.

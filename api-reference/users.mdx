@@ -1,11 +1,11 @@
 ---
-title: "Users & Invitations API — Manage Your Team Members"
+title: "Users & Invitations API - Manage Your Team Members"
 description: "List, create, and manage Raptor Comply users and invitations. Track CIP Senior Manager designations and check API key permissions. All coming soon."
 ---
 
 > List, create, and manage Raptor Comply users and invitations. Track CIP Senior Manager designations and check API key permissions. All coming soon.
 
-The Users and Invitations API gives you programmatic control over your organization's membership in Raptor Comply. You can list existing members, create new user accounts, update roles and profile data, and remove users who no longer need access. The invitation flow lets you onboard new members securely — generate an invite, let the recipient validate it, and complete enrollment via the accept endpoint. You can also query and set your organization's designated CIP Senior Manager, a role required under NERC CIP standards.
+The Users and Invitations API gives you programmatic control over your organization's membership in Raptor Comply. You can list existing members, create new user accounts, update roles and profile data, and remove users who no longer need access. The invitation flow lets you onboard new members securely - generate an invite, let the recipient validate it, and complete enrollment via the accept endpoint. You can also query and set your organization's designated CIP Senior Manager, a role required under NERC CIP standards.
 
 <Note>
   All endpoints on this page are **coming soon**. They exist in the Raptor Comply internal API but are not yet exposed via API-key authentication. Subscribe to our release notes to be notified as each endpoint becomes available.
@@ -15,7 +15,7 @@ The Users and Invitations API gives you programmatic control over your organizat
 
 ## Users
 
-The core user endpoints let you manage the full lifecycle of a Raptor Comply account — from creation to deactivation. The `/users/me` endpoints let you query and verify the identity and access of the currently authenticated caller without needing a specific user ID.
+The core user endpoints let you manage the full lifecycle of a Raptor Comply account - from creation to deactivation. The `/users/me` endpoints let you query and verify the identity and access of the currently authenticated caller without needing a specific user ID.
 
 | Method   | Path                      | Operation          | Status      |
 | -------- | ------------------------- | ------------------ | ----------- |
@@ -30,21 +30,21 @@ The core user endpoints let you manage the full lifecycle of a Raptor Comply acc
 
 ### Endpoint details
 
-**`GET /users`** — Returns a paginated list of all users in your organization. Use this to audit membership or sync your identity directory.
+**`GET /users`** - Returns a paginated list of all users in your organization. Use this to audit membership or sync your identity directory.
 
-**`POST /users`** — Creates a new Raptor Comply user account directly, without going through the invitation flow. Useful for automated provisioning from an external identity system.
+**`POST /users`** - Creates a new Raptor Comply user account directly, without going through the invitation flow. Useful for automated provisioning from an external identity system.
 
-**`GET /users/me`** — Returns the profile of the user associated with the current API key. Use this to confirm which identity your requests are running as.
+**`GET /users/me`** - Returns the profile of the user associated with the current API key. Use this to confirm which identity your requests are running as.
 
-**`GET /users/me/organizations`** — Returns all organizations the current user belongs to. Helpful when a single user account spans multiple organizations.
+**`GET /users/me/organizations`** - Returns all organizations the current user belongs to. Helpful when a single user account spans multiple organizations.
 
-**`GET /users/me/check-access`** — Checks whether the current API key holds a specific named permission. Pass the permission you want to test as a query parameter and receive a simple yes/no response. Use this to build permission-aware integrations that adapt their behavior — showing or hiding actions, enabling or disabling controls — based on what the calling API key is actually allowed to do, rather than attempting an operation and handling a denial after the fact.
+**`GET /users/me/check-access`** - Checks whether the current API key holds a specific named permission. Pass the permission you want to test as a query parameter and receive a simple yes/no response. Use this to build permission-aware integrations that adapt their behavior - showing or hiding actions, enabling or disabling controls - based on what the calling API key is actually allowed to do, rather than attempting an operation and handling a denial after the fact.
 
-**`GET /users/{id}`** — Fetches the full profile for a specific user by their ID.
+**`GET /users/{id}`** - Fetches the full profile for a specific user by their ID.
 
-**`PATCH /users/{id}`** — Updates one or more fields on an existing user record — for example, updating a role or contact information.
+**`PATCH /users/{id}`** - Updates one or more fields on an existing user record - for example, updating a role or contact information.
 
-**`DELETE /users/{id}`** — Removes a user from your organization. This action revokes all access and cannot be undone without re-creating the account.
+**`DELETE /users/{id}`** - Removes a user from your organization. This action revokes all access and cannot be undone without re-creating the account.
 
 ***
 
@@ -52,9 +52,9 @@ The core user endpoints let you manage the full lifecycle of a Raptor Comply acc
 
 Raptor Comply uses a three-step invitation flow to securely onboard new users:
 
-1. **Create** — An administrator calls `POST /invitations` to generate an invitation and send it to a new member's email address.
-2. **Validate** — The recipient (or your integration) calls `GET /invitations/validate` with the invitation token to confirm the invite is still valid before presenting an accept screen.
-3. **Accept** — The recipient calls `POST /invitations/accept` to complete enrollment and activate their account.
+1. **Create** - An administrator calls `POST /invitations` to generate an invitation and send it to a new member's email address.
+2. **Validate** - The recipient (or your integration) calls `GET /invitations/validate` with the invitation token to confirm the invite is still valid before presenting an accept screen.
+3. **Accept** - The recipient calls `POST /invitations/accept` to complete enrollment and activate their account.
 
 You can also resend an invitation that has not yet been accepted, or cancel one that is no longer needed.
 
@@ -69,23 +69,23 @@ You can also resend an invitation that has not yet been accepted, or cancel one 
 
 ### Endpoint details
 
-**`GET /invitations`** — Lists all pending and accepted invitations for your organization. Use this to monitor onboarding progress or identify stale invites.
+**`GET /invitations`** - Lists all pending and accepted invitations for your organization. Use this to monitor onboarding progress or identify stale invites.
 
-**`POST /invitations`** — Creates a new invitation and dispatches it to the specified email address. The response includes an invitation ID and, where applicable, the invite token for use in custom onboarding flows.
+**`POST /invitations`** - Creates a new invitation and dispatches it to the specified email address. The response includes an invitation ID and, where applicable, the invite token for use in custom onboarding flows.
 
-**`GET /invitations/validate`** — Accepts an invitation token as a query parameter and confirms whether the invitation is still active and unexpired. Call this before rendering an accept UI to avoid presenting a broken flow to the user.
+**`GET /invitations/validate`** - Accepts an invitation token as a query parameter and confirms whether the invitation is still active and unexpired. Call this before rendering an accept UI to avoid presenting a broken flow to the user.
 
-**`POST /invitations/accept`** — Completes the invitation flow. The caller provides the invitation token and any required profile fields to activate the new user account.
+**`POST /invitations/accept`** - Completes the invitation flow. The caller provides the invitation token and any required profile fields to activate the new user account.
 
-**`DELETE /invitations/{id}`** — Cancels a pending invitation. The invite link becomes invalid immediately. Use this if an invitation was sent to the wrong address or the user should no longer be onboarded.
+**`DELETE /invitations/{id}`** - Cancels a pending invitation. The invite link becomes invalid immediately. Use this if an invitation was sent to the wrong address or the user should no longer be onboarded.
 
-**`POST /invitations/{id}/resend`** — Resends the invitation email to the original recipient. The invitation token is refreshed, invalidating the previous link.
+**`POST /invitations/{id}/resend`** - Resends the invitation email to the original recipient. The invitation token is refreshed, invalidating the previous link.
 
 ***
 
 ## CIP Senior Manager
 
-NERC CIP requires your organization to designate a **CIP Senior Manager** — a single named individual with overall authority and responsibility for your NERC CIP compliance program. The CIP Senior Manager assignment endpoints let you query who is currently designated and create or update that assignment programmatically.
+NERC CIP requires your organization to designate a **CIP Senior Manager** - a single named individual with overall authority and responsibility for your NERC CIP compliance program. The CIP Senior Manager assignment endpoints let you query who is currently designated and create or update that assignment programmatically.
 
 Keep this record current: auditors may request evidence of a valid, unambiguous CIP Senior Manager designation during a NERC CIP audit.
 
@@ -97,8 +97,8 @@ Keep this record current: auditors may request evidence of a valid, unambiguous 
 
 ### Endpoint details
 
-**`GET /cip-senior-manager-assignments/current`** — Returns the currently active CIP Senior Manager assignment for your organization, including the assigned user's ID and the effective date of the designation.
+**`GET /cip-senior-manager-assignments/current`** - Returns the currently active CIP Senior Manager assignment for your organization, including the assigned user's ID and the effective date of the designation.
 
-**`POST /cip-senior-manager-assignments`** — Creates a new CIP Senior Manager assignment. Use this when designating a CIP Senior Manager for the first time or replacing the current designee entirely.
+**`POST /cip-senior-manager-assignments`** - Creates a new CIP Senior Manager assignment. Use this when designating a CIP Senior Manager for the first time or replacing the current designee entirely.
 
-**`PATCH /cip-senior-manager-assignments/{id}`** — Updates an existing assignment record — for example, to correct an effective date or update associated metadata without creating a new assignment.
+**`PATCH /cip-senior-manager-assignments/{id}`** - Updates an existing assignment record - for example, to correct an effective date or update associated metadata without creating a new assignment.

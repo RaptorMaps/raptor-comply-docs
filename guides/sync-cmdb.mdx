@@ -5,7 +5,7 @@ description: "Use the Raptor Comply API to keep your CMDB in sync with your NERC
 
 > Use the Raptor Comply API to keep your CMDB in sync with your NERC-classified cyber assets. Fetch, create, update, and delete assets via REST.
 
-Your NERC CIP-classified cyber assets live in Raptor Comply, but your CMDB or ITSM platform needs to reflect the same inventory. Maintaining two systems manually is error-prone and risks compliance gaps when equipment is added, reconfigured, or decommissioned. The Raptor Comply API lets you automate that bridge — programmatically fetching, creating, updating, and deleting cyber assets so your downstream systems always match what's recorded in your compliance tenant.
+Your NERC CIP-classified cyber assets live in Raptor Comply, but your CMDB or ITSM platform needs to reflect the same inventory. Maintaining two systems manually is error-prone and risks compliance gaps when equipment is added, reconfigured, or decommissioned. The Raptor Comply API lets you automate that bridge - programmatically fetching, creating, updating, and deleting cyber assets so your downstream systems always match what's recorded in your compliance tenant.
 
 ## Sync strategy overview
 
@@ -15,11 +15,11 @@ Choose the approach that fits how your CMDB and operations team work:
 
 On a schedule (nightly, hourly, or triggered by a pipeline), you fetch every cyber asset from Raptor Comply and reconcile the result against your CMDB. Records present in Raptor Comply but missing from your CMDB get created; records in your CMDB that no longer exist in Raptor Comply get removed or flagged.
 
-Full sync is the simplest pattern to implement and the safest to reason about — every run converges to a known-good state regardless of what happened between runs.
+Full sync is the simplest pattern to implement and the safest to reason about - every run converges to a known-good state regardless of what happened between runs.
 
 ### 2. Event-driven sync
 
-Your integration listens for changes — a manual trigger, an operator action in your ITSM, or a scheduled check for recent activity — and pushes only the delta to Raptor Comply. This is more efficient at scale but requires you to track state and handle failures carefully so individual missed events don't cause drift.
+Your integration listens for changes - a manual trigger, an operator action in your ITSM, or a scheduled check for recent activity - and pushes only the delta to Raptor Comply. This is more efficient at scale but requires you to track state and handle failures carefully so individual missed events don't cause drift.
 
 For most teams, **start with full sync** and move to event-driven if volume or latency requirements demand it.
 
@@ -76,7 +76,7 @@ curl -X POST https://api.raptormaps.com/cyber-assets \
   }'
 ```
 
-The response includes the newly assigned `id`. Capture that value — you'll need it for future updates and deletes.
+The response includes the newly assigned `id`. Capture that value - you'll need it for future updates and deletes.
 
 ## Updating an existing asset
 
@@ -102,7 +102,7 @@ curl -X DELETE https://api.raptormaps.com/cyber-assets/ca_01ABC123 \
   -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
 ```
 
-A successful delete returns an HTTP `204 No Content` response with no body. Deletion is permanent — see [Create, Update, and Delete Cyber Assets](/guides/manage-cyber-assets) for the warning details.
+A successful delete returns an HTTP `204 No Content` response with no body. Deletion is permanent - see [Create, Update, and Delete Cyber Assets](/guides/manage-cyber-assets) for the warning details.
 
 ## Example: full sync in Node.js
 
@@ -171,8 +171,8 @@ async function syncCyberAssets(cmdb) {
 }
 ```
 
-Extend this pattern to handle updates — for example, comparing `updated_at` timestamps to detect changed assets and patching your CMDB records accordingly.
+Extend this pattern to handle updates - for example, comparing `updated_at` timestamps to detect changed assets and patching your CMDB records accordingly.
 
 <Tip>
-  Store the Raptor Comply `id` of each cyber asset in your CMDB as an external reference field (e.g., `raptorComplyId`). This gives you a stable, collision-free key to match records across both systems during updates, deletes, and audits — even if asset names are changed.
+  Store the Raptor Comply `id` of each cyber asset in your CMDB as an external reference field (e.g., `raptorComplyId`). This gives you a stable, collision-free key to match records across both systems during updates, deletes, and audits - even if asset names are changed.
 </Tip>

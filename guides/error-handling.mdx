@@ -18,8 +18,8 @@ All error responses follow the same structure:
 }
 ```
 
-* **`error`** — a short string identifying the error type. Use this for programmatic branching.
-* **`message`** — a plain-English description. Include this in logs and alerts to make debugging faster.
+* **`error`** - a short string identifying the error type. Use this for programmatic branching.
+* **`message`** - a plain-English description. Include this in logs and alerts to make debugging faster.
 
 ## Common error codes
 
@@ -37,8 +37,8 @@ All error responses follow the same structure:
 
 Not all errors are worth retrying. Follow this rule:
 
-* **Retryable:** `429 Too Many Requests` and `5xx` server errors. These are transient conditions — the request itself is valid, and retrying after a delay will often succeed.
-* **Not retryable:** `4xx` errors (except `429`). These indicate a problem with the request — a missing header, a wrong ID, a malformed body. Retrying without fixing the underlying issue will not help.
+* **Retryable:** `429 Too Many Requests` and `5xx` server errors. These are transient conditions - the request itself is valid, and retrying after a delay will often succeed.
+* **Not retryable:** `4xx` errors (except `429`). These indicate a problem with the request - a missing header, a wrong ID, a malformed body. Retrying without fixing the underlying issue will not help.
 
 For retryable errors, use **exponential backoff with jitter** to avoid hammering the API and making rate-limit situations worse. A good starting point: wait 1 second before the first retry, double the wait on each subsequent attempt, add random jitter, and give up after 3–5 attempts.
 
@@ -98,7 +98,7 @@ const assets = await response.json();
 
 Always check the response status before consuming the body. Here are patterns in Node.js and Python:
 
-**Node.js — using `fetch`**
+**Node.js - using `fetch`**
 
 ```javascript theme={null}
 const response = await fetch("https://api.raptormaps.com/cyber-assets", {
@@ -117,7 +117,7 @@ if (!response.ok) {
 const assets = await response.json();
 ```
 
-**Python — using `requests`**
+**Python - using `requests`**
 
 ```python theme={null}
 import os
@@ -148,5 +148,5 @@ assets = response.json()
 If you receive persistent `500` errors or encounter unexpected behavior not explained by the error codes above, contact the Raptor Comply support team at [support@raptormaps.com](mailto:support@raptormaps.com). Include the full error response body, the endpoint you called, and the approximate time of the request to help the team diagnose the issue quickly.
 
 <Tip>
-  Always log the **full error response body** — not just the HTTP status code. The `error` and `message` fields are what tell you (and your on-call team) what actually went wrong. A log line that says `"API call failed: 401"` is much less useful than one that says `"API call failed: Unauthorized — API key has expired"`.
+  Always log the **full error response body** - not just the HTTP status code. The `error` and `message` fields are what tell you (and your on-call team) what actually went wrong. A log line that says `"API call failed: 401"` is much less useful than one that says `"API call failed: Unauthorized - API key has expired"`.
 </Tip>
