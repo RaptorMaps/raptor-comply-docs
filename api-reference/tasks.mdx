@@ -1,5 +1,5 @@
 ---
-title: "Tasks API — Manage Compliance Tasks and Assignments"
+title: "Tasks API - Manage Compliance Tasks and Assignments"
 description: "Manage NERC CIP compliance tasks in Raptor Comply: bulk-create tasks, update recurring control instances, and reassign work across your team. Coming soon."
 ---
 
@@ -30,7 +30,7 @@ All requests are made against the base URL `https://api.raptormaps.com`.
 
 ## Recurring tasks and task instances
 
-Many NERC CIP controls require activities on a fixed cadence — for example, reviewing access lists every quarter or testing incident response plans annually. Raptor Comply models this with a **parent task** that defines the recurring schedule and **task instances** that represent each individual occurrence.
+Many NERC CIP controls require activities on a fixed cadence - for example, reviewing access lists every quarter or testing incident response plans annually. Raptor Comply models this with a **parent task** that defines the recurring schedule and **task instances** that represent each individual occurrence.
 
 The parent task (`id`) holds the schedule definition. Each instance is identified by its `parentTaskId` combined with its specific `dueDate`. When you need to update the status, notes, or assignee for a single occurrence without changing the rest of the series, you use `PUT /tasks/{parentTaskId}/{dueDate}` to target that instance precisely.
 
@@ -74,7 +74,7 @@ X-API-Key: <your-api-key>
 X-Organization: <your-org-slug>
 
 {
-  "title": "Q2 Access Control List Review — Substation Alpha",
+  "title": "Q2 Access Control List Review - Substation Alpha",
   "assigneeId": "usr_01hx2m7...",
   "dueDate": "2025-06-30",
   "recurrence": null,
@@ -89,7 +89,7 @@ X-Organization: <your-org-slug>
 ```json theme={null}
 {
   "id": "tsk_01hx8a3...",
-  "title": "Q2 Access Control List Review — Substation Alpha",
+  "title": "Q2 Access Control List Review - Substation Alpha",
   "assigneeId": "usr_01hx2m7...",
   "status": "open",
   "dueDate": "2025-06-30",
@@ -121,7 +121,7 @@ X-Organization: <your-org-slug>
       "recurrence": "yearly"
     },
     {
-      "title": "Quarterly Vulnerability Assessment — Control Center",
+      "title": "Quarterly Vulnerability Assessment - Control Center",
       "assigneeId": "usr_01hx2m7...",
       "dueDate": "2025-06-15",
       "recurrence": "quarterly"
@@ -144,7 +144,7 @@ X-Organization: <your-org-slug>
     },
     {
       "id": "tsk_03ef0g2...",
-      "title": "Quarterly Vulnerability Assessment — Control Center",
+      "title": "Quarterly Vulnerability Assessment - Control Center",
       "status": "open",
       "dueDate": "2025-06-15"
     }
@@ -227,6 +227,6 @@ Once these endpoints are available, you will be able to:
 
 * **Mirror your compliance calendar.** Bulk-create tasks at the start of each compliance year using `POST /tasks/bulk` to load your full schedule of required CIP activities at once.
 * **Sync with project management tools.** Use `PUT /tasks/{id}` to write status updates back to Raptor Comply when work is marked complete in Jira, ServiceNow, or your internal ticketing system.
-* **Handle staff transitions cleanly.** When a compliance manager leaves, call `POST /tasks/reassign-from-csm` once to transfer all open tasks to their replacement — no hunting through individual records.
+* **Handle staff transitions cleanly.** When a compliance manager leaves, call `POST /tasks/reassign-from-csm` once to transfer all open tasks to their replacement - no hunting through individual records.
 * **Track recurring control cadences.** Use `PUT /tasks/{parentTaskId}/{dueDate}` to close out individual recurring instances as they are completed without disturbing the rest of the series.
 * **Build deadline dashboards.** Poll `GET /tasks` filtered by `status=open` and sort by `dueDate` to surface upcoming compliance deadlines in your internal reporting.

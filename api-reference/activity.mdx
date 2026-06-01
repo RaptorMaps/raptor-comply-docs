@@ -1,11 +1,11 @@
 ---
-title: "Activity Logs API — Audit Trail for Your Compliance Data"
+title: "Activity Logs API - Audit Trail for Your Compliance Data"
 description: "Retrieve audit logs for all changes made to Raptor Comply resources. Filter by resource type to track compliance-relevant activity. Coming soon."
 ---
 
 > Retrieve audit logs for all changes made to Raptor Comply resources. Filter by resource type to track compliance-relevant activity. Coming soon.
 
-The Activity Logs API gives you access to a tamper-evident audit trail of every action taken across your organization in Raptor Comply. Every meaningful event — who performed it, when it happened, and which resource it affected — is recorded and made available through this API. For NERC CIP compliance, a complete and queryable activity log is not a nice-to-have: auditors expect you to produce evidence that your organization tracks all changes to critical cyber systems, policy documents, and personnel records. The Activity Logs API makes that evidence retrievable on demand, programmatically.
+The Activity Logs API gives you access to a tamper-evident audit trail of every action taken across your organization in Raptor Comply. Every meaningful event - who performed it, when it happened, and which resource it affected - is recorded and made available through this API. For NERC CIP compliance, a complete and queryable activity log is not a nice-to-have: auditors expect you to produce evidence that your organization tracks all changes to critical cyber systems, policy documents, and personnel records. The Activity Logs API makes that evidence retrievable on demand, programmatically.
 
 <Note>
   All endpoints on this page are **coming soon**. They exist in the Raptor Comply internal API but are not yet exposed via API-key authentication. Subscribe to our release notes to be notified as each endpoint becomes available.
@@ -17,13 +17,13 @@ The Activity Logs API gives you access to a tamper-evident audit trail of every 
 
 Raptor Comply records activity events across all major resource types. When the API is available, you'll be able to retrieve logs for events including:
 
-* **Resource creation** — A new facility, cyber system, cyber asset, policy document, task, or training module is added to the organization.
-* **Resource updates** — Any field-level change to an existing record, including what changed, who changed it, and when.
-* **Resource deletions** — Permanent removal of a record, with the identity of the actor preserved.
-* **User and access events** — User account creation, invitation acceptance, role updates, access grants, and access revocations.
-* **Document lifecycle events** — Policy document submissions, approvals, reversions, and PDF exports.
-* **Training activity** — Training assignment completions and status transitions.
-* **Authentication events** — User logins and session activity, where applicable.
+* **Resource creation** - A new facility, cyber system, cyber asset, policy document, task, or training module is added to the organization.
+* **Resource updates** - Any field-level change to an existing record, including what changed, who changed it, and when.
+* **Resource deletions** - Permanent removal of a record, with the identity of the actor preserved.
+* **User and access events** - User account creation, invitation acceptance, role updates, access grants, and access revocations.
+* **Document lifecycle events** - Policy document submissions, approvals, reversions, and PDF exports.
+* **Training activity** - Training assignment completions and status transitions.
+* **Authentication events** - User logins and session activity, where applicable.
 
 Each log entry includes a timestamp, the ID and type of the affected resource, the ID of the user who performed the action, and a description of the operation.
 
@@ -31,7 +31,7 @@ Each log entry includes a timestamp, the ID and type of the affected resource, t
 
 ## Filtering by resource
 
-`GET /activity/by-resource-type/{resourceType}/{resourceId}` lets you retrieve the complete history of a single object. Provide the resource type (for example, `facility`, `cyber-asset`, or `policy-document`) and the object's ID, and you get back all activity events ever recorded for that specific record — ordered chronologically.
+`GET /activity/by-resource-type/{resourceType}/{resourceId}` lets you retrieve the complete history of a single object. Provide the resource type (for example, `facility`, `cyber-asset`, or `policy-document`) and the object's ID, and you get back all activity events ever recorded for that specific record - ordered chronologically.
 
 Use this endpoint when you need to show an auditor the full lifecycle of a specific asset: when it was created, every change made to it, and who authorized each change. It's also useful for debugging unexpected state changes or for generating per-resource change reports as part of an internal review.
 
@@ -39,9 +39,9 @@ Use this endpoint when you need to show an auditor the full lifecycle of a speci
 
 ## SIEM integration
 
-For organizations that centralize compliance monitoring in a Security Information and Event Management (SIEM) system or log aggregation platform, the Activity Logs API provides the data feed you need. You can poll `GET /activity` on a schedule — hourly, daily, or in near-real-time — and push the results into tools like Splunk, Microsoft Sentinel, IBM QRadar, or any system that accepts JSON-formatted event data.
+For organizations that centralize compliance monitoring in a Security Information and Event Management (SIEM) system or log aggregation platform, the Activity Logs API provides the data feed you need. You can poll `GET /activity` on a schedule - hourly, daily, or in near-real-time - and push the results into tools like Splunk, Microsoft Sentinel, IBM QRadar, or any system that accepts JSON-formatted event data.
 
-This integration pattern gives your security operations team visibility into Raptor Comply activity alongside events from your other OT and IT systems, making it easier to detect anomalies, investigate incidents, and produce the unified audit evidence that NERC CIP auditors look for. When you combine access control events with resource change events, you can construct a complete picture of who had access to what — and what they did with it.
+This integration pattern gives your security operations team visibility into Raptor Comply activity alongside events from your other OT and IT systems, making it easier to detect anomalies, investigate incidents, and produce the unified audit evidence that NERC CIP auditors look for. When you combine access control events with resource change events, you can construct a complete picture of who had access to what - and what they did with it.
 
 <Tip>
   When building a SIEM integration, use the `by-resource-type` endpoint to backfill historical activity for individual high-value resources (such as BES Cyber Systems), and use the top-level `GET /activity` endpoint for ongoing incremental log collection.
@@ -58,6 +58,6 @@ This integration pattern gives your security operations team visibility into Rap
 
 ### Endpoint details
 
-**`GET /activity`** — Returns a paginated list of all activity log entries for your organization, ordered by timestamp descending. Supports filtering by date range, actor, and resource type. Use this as the primary feed for SIEM ingestion or organization-wide audit reviews.
+**`GET /activity`** - Returns a paginated list of all activity log entries for your organization, ordered by timestamp descending. Supports filtering by date range, actor, and resource type. Use this as the primary feed for SIEM ingestion or organization-wide audit reviews.
 
-**`GET /activity/by-resource-type/{resourceType}/{resourceId}`** — Returns all activity log entries for a specific resource, identified by its type and ID. Use this to produce a focused, auditable change history for any individual object in Raptor Comply — from a single cyber asset to an entire policy document's revision history.
+**`GET /activity/by-resource-type/{resourceType}/{resourceId}`** - Returns all activity log entries for a specific resource, identified by its type and ID. Use this to produce a focused, auditable change history for any individual object in Raptor Comply - from a single cyber asset to an entire policy document's revision history.
