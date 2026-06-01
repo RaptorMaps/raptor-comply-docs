@@ -122,7 +122,7 @@ An unexpected error occurred on our end while processing your request. This is n
 
 ## Authentication errors in detail
 
-The three authentication-specific failures each have an exact, stable JSON body you can match against the `error` and `message` fields in your error-handling logic:
+The three authentication-specific failures each return a `401 Unauthorized` status with a stable `error` value of `Unauthorized`. Match on HTTP status and the `error` field; the `message` field is informational and may change between releases.
 
 **Missing `X-API-Key` header** - `401 Unauthorized`
 
