@@ -10,9 +10,7 @@ Policy documents are the backbone of your NERC CIP compliance program. They repr
 When the Policy Documents API launches, you will be able to create and update documents programmatically, drive documents through the submit-and-approve workflow without touching the Raptor Comply UI, attach supporting assets, and pull version history directly into your own tooling or audit pipelines.
 
 <Note>
-  All endpoints on this page are coming soon. They exist in the Raptor Comply
-  platform but are not yet available via API key auth. Subscribe to release
-  notes to be notified when they launch.
+  These endpoints are **coming soon**. The Raptor Comply API does not currently expose `Policy Documents` operations to API key callers. This page describes the planned surface; subscribe to release notes to be notified when it ships.
 </Note>
 
 ## Authentication
@@ -21,7 +19,6 @@ Every request requires your API key and organization identifier as headers:
 
 ```http theme={null}
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 All requests are made against the base URL `https://api.raptormaps.com`.
@@ -96,7 +93,6 @@ Every time a policy document is approved, Raptor Comply creates a new version re
 POST /policy-documents
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "title": "Physical Security Plan - Substation Alpha",
@@ -129,7 +125,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 POST /policy-documents/pd_01hx5r2.../submit
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**
@@ -150,7 +145,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 GET /policy-documents/pd_01hx5r2.../versions/latest
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**

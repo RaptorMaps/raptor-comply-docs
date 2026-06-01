@@ -10,9 +10,7 @@ Evidence records are how Raptor Comply ties proof to compliance. Whenever you co
 When the Evidence API launches, you will be able to upload and retrieve that proof programmatically, eliminating the need to manually attach files through the UI. This makes it practical to pipe evidence directly from your operational tooling - patch management systems, SIEM exports, ticketing platforms - straight into your Raptor Comply compliance record.
 
 <Note>
-  All endpoints on this page are coming soon. They exist in the Raptor Comply
-  platform but are not yet available via API key auth. Subscribe to release
-  notes to be notified when they launch.
+  These endpoints are **coming soon**. The Raptor Comply API does not currently expose `Evidence` operations to API key callers. This page describes the planned surface; subscribe to release notes to be notified when it ships.
 </Note>
 
 ## Authentication
@@ -21,7 +19,6 @@ Every request requires your API key and organization identifier as headers:
 
 ```http theme={null}
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 All requests are made against the base URL `https://api.raptormaps.com`.
@@ -59,7 +56,6 @@ Evidence records are immutable once created. To update evidence, delete the exis
 POST /evidence
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "resourceId": "ca_01hx4t8...",
@@ -92,7 +88,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 GET /evidence/by-resource/ca_01hx4t8...
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**
@@ -131,7 +126,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 GET /evidence/ev_01hx9b3...
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**
@@ -156,7 +150,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 DELETE /evidence/ev_01hx9b3...
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `204 No Content`**
