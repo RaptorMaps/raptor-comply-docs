@@ -10,18 +10,15 @@ NERC CIP Standard CIP-004 requires that all personnel with access to BES Cyber S
 When the Training API launches, you will be able to manage your training program programmatically and integrate directly with your Learning Management System (LMS). Push new modules as your curriculum evolves, assign training to personnel as they onboard or change roles, mark completions as your LMS reports them, and export assignment records ready for an auditor's review.
 
 <Note>
-  All endpoints on this page are coming soon. They exist in the Raptor Comply
-  platform but are not yet available via API key auth. Subscribe to release
-  notes to be notified when they launch.
+  These endpoints are **coming soon**. The Raptor Comply API does not currently expose `Training` operations to API key callers. This page describes the planned surface; subscribe to release notes to be notified when it ships.
 </Note>
 
 ## Authentication
 
-Every request requires your API key and organization identifier as headers:
+When these endpoints ship, requests will require your API key in the `X-API-Key` header:
 
 ```http theme={null}
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 All requests are made against the base URL `https://api.raptormaps.com`.
@@ -50,7 +47,6 @@ Modules typically map to specific CIP requirements - for example, a "CIP-004 Cyb
 POST /training-modules
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "title": "CIP-004 Cyber Security Awareness Training",
@@ -114,7 +110,6 @@ Raptor Comply stores a completion record when you mark an assignment complete, c
 POST /training-assignments
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "userId": "usr_01hx2m7...",
@@ -149,7 +144,6 @@ X-Organization: <your-org-slug>
 POST /training-assignments/ta_01hx7d5.../complete
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "completedAt": "2025-04-10T14:15:00Z",
@@ -181,7 +175,6 @@ X-Organization: <your-org-slug>
 POST /training-assignments/ta_01hx7d5.../facilities
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "facilityIds": [
@@ -210,7 +203,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 GET /training-assignments/export?format=csv&status=complete&moduleId=tm_01hx6c4...
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 The export endpoint returns a downloadable file containing all matching training assignment records. The response includes a `Content-Disposition: attachment` header. Use this endpoint to generate compliance documentation packages ahead of NERC audits.

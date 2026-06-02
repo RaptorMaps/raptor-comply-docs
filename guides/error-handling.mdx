@@ -25,7 +25,6 @@ All error responses follow the same structure:
 
 | Status | `error` value           | Cause                                   | Resolution                                                                 |
 | ------ | ----------------------- | --------------------------------------- | -------------------------------------------------------------------------- |
-| `400`  | `Bad Request`           | Missing `Organization` header           | Add the `Organization` header to every request                             |
 | `401`  | `Unauthorized`          | Missing or invalid `X-API-Key`          | Check that your API key is correct, active, and not expired                |
 | `403`  | `Forbidden`             | Key lacks permission for this operation | Contact your organization admin to review key permissions                  |
 | `404`  | `Not Found`             | Resource ID does not exist              | Verify the ID is correct and belongs to your organization                  |

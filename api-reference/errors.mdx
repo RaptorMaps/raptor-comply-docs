@@ -30,19 +30,6 @@ Every error response - regardless of status code - follows this shape:
 
 These errors originate in your request. Fix the issue described in the `message` field and retry.
 
-### 400 Bad Request
-
-Your request was syntactically valid but was missing a required element that cannot be defaulted.
-
-**Common cause:** The `Organization` header is absent.
-
-```json theme={null}
-{
-  "error": "Bad Request",
-  "message": "Missing Organization header"
-}
-```
-
 ### 401 Unauthorized
 
 The API could not authenticate you. This happens when the `X-API-Key` header is missing, the key value is not recognized, or the key has passed its expiry date.
@@ -87,7 +74,7 @@ Your API key is valid, but it does not have permission to perform the requested 
 
 ### 404 Not Found
 
-The resource you requested does not exist, or it exists in a different organization than the one identified by your `Organization` header. Double-check the ID in the path and confirm it belongs to your tenant.
+The resource you requested does not exist, or it exists in a different organization than the one identified by your API key. Double-check the ID in the path and confirm it belongs to your tenant.
 
 ```json theme={null}
 {
@@ -135,7 +122,7 @@ An unexpected error occurred on our end while processing your request. This is n
 
 ## Authentication errors in detail
 
-The four authentication-specific failures each have an exact, stable JSON body you can match against the `error` and `message` fields in your error-handling logic:
+The three authentication-specific failures each return a `401 Unauthorized` status with a stable `error` value of `Unauthorized`. Match on HTTP status and the `error` field; the `message` field is informational and may change between releases.
 
 **Missing `X-API-Key` header** - `401 Unauthorized`
 
@@ -143,15 +130,6 @@ The four authentication-specific failures each have an exact, stable JSON body y
 {
   "error": "Unauthorized",
   "message": "Missing X-API-Key header"
-}
-```
-
-**Missing `Organization` header** - `400 Bad Request`
-
-```json theme={null}
-{
-  "error": "Bad Request",
-  "message": "Missing Organization header"
 }
 ```
 

@@ -10,18 +10,15 @@ Tasks in Raptor Comply represent the discrete action items that keep your NERC C
 When the Tasks API launches, you will be able to create and manage tasks programmatically, bulk-load tasks from your project management tools, update recurring task instances independently of their parent schedule, and reassign work across your team when personnel responsibilities change.
 
 <Note>
-  All endpoints on this page are coming soon. They exist in the Raptor Comply
-  platform but are not yet available via API key auth. Subscribe to release
-  notes to be notified when they launch.
+  These endpoints are **coming soon**. The Raptor Comply API does not currently expose `Tasks` operations to API key callers. This page describes the planned surface; subscribe to release notes to be notified when it ships.
 </Note>
 
 ## Authentication
 
-Every request requires your API key and organization identifier as headers:
+When these endpoints ship, requests will require your API key in the `X-API-Key` header:
 
 ```http theme={null}
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 All requests are made against the base URL `https://api.raptormaps.com`.
@@ -71,7 +68,6 @@ The parent task (`id`) holds the schedule definition. Each instance is identifie
 POST /tasks
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "title": "Q2 Access Control List Review - Substation Alpha",
@@ -110,7 +106,6 @@ X-Organization: <your-org-slug>
 POST /tasks/bulk
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "tasks": [
@@ -160,7 +155,6 @@ X-Organization: <your-org-slug>
 PUT /tasks/tsk_03ef0g2.../2025-09-15
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "status": "complete",
@@ -189,7 +183,6 @@ X-Organization: <your-org-slug>
 POST /tasks/reassign-from-csm
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "fromUserId": "usr_departing_01...",
