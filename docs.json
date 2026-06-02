@@ -24,7 +24,7 @@
         ]
       },
       {
-        "group": "Concepts",
+        "group": "Core Concepts",
         "pages": [
           "concepts/data-model",
           "concepts/organizations",
