@@ -1,0 +1,80 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Raptor Comply",
+  "colors": {
+    "primary": "#0A1C32",
+    "light": "#8AA5FF",
+    "dark": "#26395D"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/images/logo/logo.svg",
+    "dark": "/images/logo/logo.svg",
+    "href": "https://raptorcomply.com"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "authentication",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Concepts",
+        "pages": [
+          "concepts/data-model",
+          "concepts/organizations",
+          "concepts/permissions"
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/sync-cmdb",
+          "guides/manage-cyber-assets",
+          "guides/error-handling"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "pages": [
+          "api-reference/overview",
+          "api-reference/facilities",
+          "api-reference/control-centers",
+          "api-reference/cyber-systems",
+          "api-reference/cyber-assets",
+          "api-reference/access-control",
+          "api-reference/policy-documents",
+          "api-reference/evidence",
+          "api-reference/tasks",
+          "api-reference/training",
+          "api-reference/users",
+          "api-reference/activity",
+          "api-reference/errors"
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Sign In",
+      "href": "https://app.raptorcomply.com"
+    },
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@raptormaps.com"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "linkedin": "https://www.linkedin.com/company/raptor-maps"
+    }
+  }
+}
