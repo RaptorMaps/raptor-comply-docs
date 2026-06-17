@@ -1,11 +1,11 @@
 ---
 title: "Introduction"
-description: "Raptor Comply gives GO, GOP, TO, and TOP entities a REST API to maintain NERC internal controls and workflows for work order sync, cyber assets for CMDB sync and evidence for file system sync."
+description: "Raptor Comply gives customers a REST API to maintain NERC internal controls and workflows for syncing cyber assets with a CMDB, work orders with a CMMS, and evidence for a file system."
 ---
 
-> Raptor Comply gives GO, GOP, TO, and TOP entities a REST API to maintain NERC internal controls and workflows for work order sync, cyber assets for CMDB sync and evidence for file system sync.
+> Raptor Comply gives customers a REST API to maintain NERC internal controls and workflows for syncing cyber assets with a CMDB, work orders with a CMMS, and evidence for a file system.
 
-[Raptor Comply](https://raptorcomply.com) is a NERC OT compliance platform covering CIP and O\&P standards for electric utilities. The Raptor Comply REST API gives you - compliance leads, OT engineers, and integration developers at GO, GOP, TO, and TOP entities - programmatic access to your compliance data. Use it to sync assets into your CMDB, feed your SIEM, integrate with your CMMS, or automate any part of your compliance workflow that lives outside the Raptor Comply UI.
+[Raptor Comply](https://raptorcomply.com) is a NERC OT compliance platform covering CIP and O&P standards for generation and transmission owners and operators. The Raptor Comply REST API gives you - compliance leads, OT engineers, and integration developers - programmatic access to your compliance data. Use it to sync assets into your CMDB, feed your SIEM, integrate with your CMMS, or automate any part of your compliance workflow that lives outside the Raptor Comply UI.
 
 <CardGroup cols={2}>
   <Card title="Authentication" icon="key" href="/authentication">
@@ -29,12 +29,12 @@ description: "Raptor Comply gives GO, GOP, TO, and TOP entities a REST API to ma
 
 The current API surface focuses on your core NERC CIP inventory objects. Read access lets you pull the structural data you've already classified in Raptor Comply. Full CRUD on cyber assets means you can drive asset lifecycle changes - additions, retirements, reclassifications - directly from your integration tooling. We are extending the API surface to other objects within the data model: controls, tasks, incidents, access requests, documents and evidence.
 
-| Resource            | Access                       |
-| ------------------- | ---------------------------- |
-| **Facilities**      | Read                         |
-| **Control Centers** | Read                         |
-| **Cyber Systems**   | Read                         |
-| **Cyber Assets**    | Read, Create, Update, Delete |
+| Resource | Access |
+| --- | --- |
+| **Facilities** | Read |
+| **Control Centers** | Read |
+| **Cyber Systems** | Read |
+| **Cyber Assets** | Read, Create, Update, Delete |
 
 All requests go to the base URL `https://api.raptormaps.com` and require the `X-API-Key` header on every call. Each API key is bound to a single organization, so the key alone identifies your tenant. See [Authentication](/authentication) for details.
 
