@@ -1,24 +1,23 @@
 ---
 title: "Raptor Comply API Quickstart - Make Your First Call"
-description: "Make your first Raptor Comply API call in under five minutes. List your facilities with curl, Node.js, or Python using your API key and organization slug."
+description: "Make your first Raptor Comply API call in under five minutes. List your facilities with curl, Node.js, or Python using your API key."
 ---
 
-> Make your first Raptor Comply API call in under five minutes. List your facilities with curl, Node.js, or Python using your API key and organization slug.
+> Make your first Raptor Comply API call in under five minutes. List your facilities with curl, Node.js, or Python using your API key.
 
-This guide walks you through making your first Raptor Comply API call - listing the facilities in your organization. You'll be up and running in under five minutes.
+This guide walks you through making your first Raptor Comply API call: listing the facilities in your organization. You'll be up and running in under five minutes.
 
-Before you start, make sure you have your API key and organization slug. If you haven't set those up yet, see [Authentication](/authentication) to get them from your Organization Admin.
+Before you start, make sure you have your API key. If you haven't set it up yet, see [Authentication](/authentication) to get one from your Organization Admin.
 
 <Steps>
   <Step title="Set your credentials">
-    Visit the **Settings page ([https://app.raptorcomply.com/settings](https://app.raptorcomply.com/settings))** in Raptor Comply. Note: only Organization Admins can access this page. Export your API key and organization slug as environment variables. This keeps your credentials out of your code and command history.
+    Visit the **Settings page ([https://app.raptorcomply.com/settings](https://app.raptorcomply.com/settings))** in Raptor Comply. Note: only Organization Admins can access this page. Export your API key as an environment variable. This keeps your credentials out of your code and command history.
 
     ```bash theme={null}
-    export RAPTOR_COMPLY_API_KEY=rmcp_xxxxxxxxxxxxxxxxxxxxxxxx
-    export RAPTOR_COMPLY_ORG_SLUG=your-organization-slug
+    export RAPTOR_COMPLY_API_KEY=rc_live_xxxxxxxxxxxxxxxxxxxxxxxx
     ```
 
-    Replace the values with your actual API key and organization slug. Every example in this guide reads from these variables.
+    Replace the value with your actual API key. The key identifies your organization on its own, so no slug is needed. Every example in this guide reads from this variable.
   </Step>
 
   <Step title="List your facilities">
@@ -27,15 +26,13 @@ Before you start, make sure you have your API key and organization slug. If you 
     <CodeGroup>
       ```bash curl theme={null}
       curl https://api.raptormaps.com/facilities \
-        -H "X-API-Key: $RAPTOR_COMPLY_API_KEY" \
-        -H "Organization: $RAPTOR_COMPLY_ORG_SLUG"
+        -H "X-API-Key: $RAPTOR_COMPLY_API_KEY"
       ```
 
       ```javascript Node.js theme={null}
       const response = await fetch("https://api.raptormaps.com/facilities", {
         headers: {
           "X-API-Key": process.env.RAPTOR_COMPLY_API_KEY,
-          "Organization": process.env.RAPTOR_COMPLY_ORG_SLUG,
         },
       });
 
@@ -55,7 +52,6 @@ Before you start, make sure you have your API key and organization slug. If you 
           "https://api.raptormaps.com/facilities",
           headers={
               "X-API-Key": os.environ["RAPTOR_COMPLY_API_KEY"],
-              "Organization": os.environ["RAPTOR_COMPLY_ORG_SLUG"],
           },
       )
       response.raise_for_status()
@@ -80,18 +76,18 @@ Before you start, make sure you have your API key and organization slug. If you 
     ]
     ```
 
-    Each object includes a stable `id` you can use to fetch that facility's detail record, drill into its associated cyber systems, or scope subsequent queries. Hold on to these IDs — you'll use them throughout your integration.
+    Each object includes a stable `id` you can use to fetch that facility's detail record, drill into its associated cyber systems, or scope subsequent queries. Hold on to these IDs. You'll use them throughout your integration.
   </Step>
 
   <Step title="Next steps">
     Now that you can list facilities, here are the natural next moves:
 
     * **Drill into a facility's cyber systems.** Use a facility `id` to query `GET /cyber-systems` and see the CIP-classified systems associated with that location.
-    * **Create a cyber asset.** `POST /cyber-assets` supports full asset creation — use this to push new assets from your CMDB into Raptor Comply. See the [Cyber Assets reference](/api-reference/cyber-assets) for the full request schema.
+    * **Create a cyber asset.** `POST /cyber-assets` supports full asset creation: use this to push new assets from your CMDB into Raptor Comply. See the [Cyber Assets reference](/api-reference/cyber-assets) for the full request schema.
     * **Set up a continuous sync.** If you're building a recurring integration between Raptor Comply and a CMDB or CMMS, see the [CMDB sync guide](/guides/sync-cmdb) for a recommended pattern using the full cyber asset CRUD surface.
   </Step>
 </Steps>
 
 <Note>
-  If you receive a `401 Unauthorized` or `400 Bad Request` response, double-check that both the `X-API-Key` and `Organization` headers are present in your request and that your API key has not expired. See [Authentication](/authentication) for the full list of error shapes and how to resolve each one.
+  If you receive a `401 Unauthorized` response, double-check that the `X-API-Key` header is present in your request and that your API key has not expired. See [Authentication](/authentication) for the full list of error shapes and how to resolve each one.
 </Note>

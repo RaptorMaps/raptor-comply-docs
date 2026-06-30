@@ -5,13 +5,13 @@ description: "Understand how Raptor Comply organizes your NERC compliance data i
 
 > Understand how Raptor Comply organizes your NERC compliance data into facilities, control centers, cyber systems, and cyber assets.
 
-Raptor Comply organizes your NERC compliance data into a structured hierarchy of infrastructure resources. At the top sit **Facilities** and **Control Centers** — the physical and operational anchors of your NERC-registered footprint. Below them, **Cyber Systems** group logically related assets, and **Cyber Assets** represent the individual devices and software instances you track day-to-day. Understanding this hierarchy helps you navigate the API and build integrations that accurately reflect your compliance posture.
+Raptor Comply organizes your NERC compliance data into a structured hierarchy of infrastructure resources. At the top sit **Facilities** and **Control Centers**, the physical and operational anchors of your NERC-registered footprint. Below them, **Cyber Systems** group logically related assets, and **Cyber Assets** represent the individual devices and software instances you track day-to-day. Understanding this hierarchy helps you navigate the API and build integrations that accurately reflect your compliance posture.
 
 ## Infrastructure resource types
 
 ### Facilities
 
-A Facility represents a physical or logical NERC-registered site — a substation, generation plant, transmission station, or similar entity. Facilities are the top-level entity in most Raptor Comply workflows. Nearly everything else — cyber systems, cyber assets, evidence, tasks, and training assignments — can be anchored to a facility. When you query the API, filtering by facility is usually the most direct path to the data you need.
+A Facility represents a physical or logical NERC-registered site: a substation, generation plant, transmission station, or similar entity. Facilities are the top-level entity in most Raptor Comply workflows. Nearly everything else can be anchored to a facility: cyber systems, cyber assets, evidence, tasks, and training assignments. When you query the API, filtering by facility is usually the most direct path to the data you need.
 
 ### Control Centers
 
@@ -23,7 +23,7 @@ A Cyber System represents a BES Cyber System (BCS) as defined under NERC CIP. Ea
 
 ### Cyber Assets
 
-A Cyber Asset is an individual device, software instance, or logical element classified under a parent cyber system. This is the most granular infrastructure resource in Raptor Comply — firewalls, historians, workstations, PLCs, switches, and similar OT/IT components all live here. Cyber Assets are the only infrastructure resource with full create, update, and delete access via the API today, which makes them the right integration point for keeping your CMDB or asset inventory in sync with Raptor Comply.
+A Cyber Asset is an individual device, software instance, or logical element classified under a parent cyber system. This is the most granular infrastructure resource in Raptor Comply: firewalls, historians, workstations, PLCs, switches, and similar OT/IT components all live here. Cyber Assets are the only infrastructure resource with full create, update, and delete access via the API today, which makes them the right integration point for keeping your CMDB or asset inventory in sync with Raptor Comply.
 
 ## Resource hierarchy
 
@@ -37,7 +37,7 @@ Control Center
     └── Cyber Asset
 ```
 
-A cyber system always belongs to exactly one parent — either a facility or a control center. Cyber assets always belong to exactly one cyber system. When you retrieve a cyber asset from the API, its response includes references to its parent cyber system and, transitively, to the facility or control center above it.
+A cyber system always belongs to exactly one parent: either a facility or a control center. Cyber assets always belong to exactly one cyber system. When you retrieve a cyber asset from the API, its response includes references to its parent cyber system and, transitively, to the facility or control center above it.
 
 ## API access by resource
 
@@ -50,7 +50,7 @@ A cyber system always belongs to exactly one parent — either a facility or a c
 
 ## Compliance resources
 
-Sitting above the infrastructure layer, Raptor Comply also manages a set of compliance resources: **Policy Documents**, **Evidence**, **Tasks**, and **Training** (modules and assignments). These higher-level objects reference infrastructure resources — for example, a task may be scoped to a specific facility, or evidence may be attached to a cyber system. API access to compliance resources is rolling out progressively; see the [API Reference](/api-reference/overview) for current availability.
+Sitting above the infrastructure layer, Raptor Comply also manages a set of compliance resources: **Policy Documents**, **Evidence**, **Tasks**, and **Training** (modules and assignments). These higher-level objects reference infrastructure resources. For example, a task may be scoped to a specific facility, or evidence may be attached to a cyber system. API access to compliance resources is rolling out progressively; see the [API Reference](/api-reference/overview) for current availability.
 
 <Note>
   Create, update, and delete operations for Facilities, Control Centers, and Cyber Systems are coming soon. Today those resources are read-only via the API. Full CRUD for these resource types will be available in an upcoming release.

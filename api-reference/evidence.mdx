@@ -1,13 +1,13 @@
 ---
-title: "Evidence API — Attach Compliance Evidence to Resources"
+title: "Evidence API: Attach Compliance Evidence to Resources"
 description: "Create, retrieve, and delete compliance evidence linked to Raptor Comply resources like cyber assets, tasks, and policy documents. Coming soon."
 ---
 
 > Create, retrieve, and delete compliance evidence linked to Raptor Comply resources like cyber assets, tasks, and policy documents. Coming soon.
 
-Evidence records are how Raptor Comply ties proof to compliance. Whenever you complete a control activity — a patch, a physical inspection, a configuration review — you need a verifiable artifact that demonstrates it happened. Raptor Comply lets you link evidence (files, notes, external links) to any compliance resource in the platform, such as a cyber asset, a task, or a policy document.
+Evidence records are how Raptor Comply ties proof to compliance. Whenever you complete a control activity, such as a patch, a physical inspection, or a configuration review, you need a verifiable artifact that demonstrates it happened. Raptor Comply lets you link evidence (files, notes, external links) to any compliance resource in the platform, such as a cyber asset, a task, or a policy document.
 
-When the Evidence API launches, you will be able to upload and retrieve that proof programmatically, eliminating the need to manually attach files through the UI. This makes it practical to pipe evidence directly from your operational tooling — patch management systems, SIEM exports, ticketing platforms — straight into your Raptor Comply compliance record.
+When the Evidence API launches, you will be able to upload and retrieve that proof programmatically, eliminating the need to manually attach files through the UI. This makes it practical to pipe evidence directly from your operational tooling, such as patch management systems, SIEM exports, and ticketing platforms, straight into your Raptor Comply compliance record.
 
 <Note>
   All endpoints on this page are coming soon. They exist in the Raptor Comply
@@ -17,11 +17,10 @@ When the Evidence API launches, you will be able to upload and retrieve that pro
 
 ## Authentication
 
-Every request requires your API key and organization identifier as headers:
+Every request requires your API key as a header:
 
 ```http theme={null}
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 All requests are made against the base URL `https://api.raptormaps.com`.
@@ -32,9 +31,9 @@ All requests are made against the base URL `https://api.raptormaps.com`.
 
 An evidence record is a lightweight object that represents one artifact of proof. It holds:
 
-* **A link to the resource it supports** — identified by `resourceId` and `resourceType` (e.g., a cyber asset ID, a task ID, or a policy document ID).
-* **The artifact itself** — either a file reference (linked via a `fileId` from the Files API), a plain-text note, or an external URL.
-* **Metadata** — who created it, when, and an optional description to explain what the evidence demonstrates.
+* **A link to the resource it supports:** identified by `resourceId` and `resourceType` (e.g., a cyber asset ID, a task ID, or a policy document ID).
+* **The artifact itself:** either a file reference (linked via a `fileId` from the Files API), a plain-text note, or an external URL.
+* **Metadata:** who created it, when, and an optional description to explain what the evidence demonstrates.
 
 Evidence records are immutable once created. To update evidence, delete the existing record and create a new one. This preserves the integrity of your compliance audit trail.
 
@@ -59,7 +58,6 @@ Evidence records are immutable once created. To update evidence, delete the exis
 POST /evidence
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
   "resourceId": "ca_01hx4t8...",
@@ -92,7 +90,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 GET /evidence/by-resource/ca_01hx4t8...
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**
@@ -131,7 +128,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 GET /evidence/ev_01hx9b3...
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**
@@ -156,7 +152,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 DELETE /evidence/ev_01hx9b3...
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `204 No Content`**
@@ -193,7 +188,7 @@ Evidence can be attached to any of the following resource types in Raptor Comply
 
 Once these endpoints are available, you will be able to:
 
-* **Automate evidence collection from operational systems.** When your patch management platform confirms a patch, POST the patch report directly to the corresponding cyber asset as an evidence record — no manual upload required.
+* **Automate evidence collection from operational systems.** When your patch management platform confirms a patch, POST the patch report directly to the corresponding cyber asset as an evidence record, with no manual upload required.
 * **Build compliance dashboards.** Use `GET /evidence/by-resource/{resourceId}` to show the evidence count and status for each asset in a custom reporting view.
 * **Integrate ticketing systems.** When a Jira ticket or ServiceNow incident is closed, automatically create an evidence record on the related Raptor Comply task or asset.
 * **Audit package generation.** Pull all evidence for a set of assets or tasks and bundle them into an organized export for your NERC auditors.

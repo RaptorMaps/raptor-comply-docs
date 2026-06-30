@@ -5,11 +5,11 @@ description: "Raptor Comply returns standard HTTP status codes. Every error resp
 
 > Raptor Comply returns standard HTTP status codes. Every error response includes a machine-readable JSON body with error and message fields.
 
-The Raptor Comply API uses standard HTTP status codes to communicate the outcome of every request. Codes in the `2xx` range indicate success. Codes in the `4xx` range mean your request could not be fulfilled as sent — check your headers, path, and request body. Codes in the `5xx` range indicate an unexpected problem on our end. Every error response includes a consistent JSON body so you can programmatically detect and handle failures without parsing the response text.
+The Raptor Comply API uses standard HTTP status codes to communicate the outcome of every request. Codes in the `2xx` range indicate success. Codes in the `4xx` range mean your request could not be fulfilled as sent: check your header, path, and request body. Codes in the `5xx` range indicate an unexpected problem on our end. Every error response includes a consistent JSON body so you can programmatically detect and handle failures without parsing the response text.
 
 ## Error response schema
 
-Every error response — regardless of status code — follows this shape:
+Every error response, regardless of status code, follows this shape:
 
 ```json theme={null}
 {
@@ -32,14 +32,12 @@ These errors originate in your request. Fix the issue described in the `message`
 
 ### 400 Bad Request
 
-Your request was syntactically valid but was missing a required element that cannot be defaulted.
-
-**Common cause:** The `Organization` header is absent.
+Your request was malformed: the JSON body could not be parsed, or a required element was missing and could not be defaulted.
 
 ```json theme={null}
 {
   "error": "Bad Request",
-  "message": "Missing Organization header"
+  "message": "Request body could not be parsed"
 }
 ```
 
@@ -87,7 +85,7 @@ Your API key is valid, but it does not have permission to perform the requested 
 
 ### 404 Not Found
 
-The resource you requested does not exist, or it exists in a different organization than the one identified by your `Organization` header. Double-check the ID in the path and confirm it belongs to your tenant.
+The resource you requested does not exist, or it belongs to a different organization than the one your API key is scoped to. Double-check the ID in the path and confirm it belongs to your tenant.
 
 ```json theme={null}
 {
@@ -135,9 +133,9 @@ An unexpected error occurred on our end while processing your request. This is n
 
 ## Authentication errors in detail
 
-The four authentication-specific failures each have an exact, stable JSON body you can match against the `error` and `message` fields in your error-handling logic:
+The three authentication-specific failures each have an exact, stable JSON body you can match against the `error` and `message` fields in your error-handling logic:
 
-**Missing `X-API-Key` header** — `401 Unauthorized`
+**Missing `X-API-Key` header**, `401 Unauthorized`
 
 ```json theme={null}
 {
@@ -146,16 +144,7 @@ The four authentication-specific failures each have an exact, stable JSON body y
 }
 ```
 
-**Missing `Organization` header** — `400 Bad Request`
-
-```json theme={null}
-{
-  "error": "Bad Request",
-  "message": "Missing Organization header"
-}
-```
-
-**Invalid API key** — `401 Unauthorized`
+**Invalid API key**, `401 Unauthorized`
 
 ```json theme={null}
 {
@@ -164,7 +153,7 @@ The four authentication-specific failures each have an exact, stable JSON body y
 }
 ```
 
-**Expired API key** — `401 Unauthorized`
+**Expired API key**, `401 Unauthorized`
 
 ```json theme={null}
 {
@@ -179,8 +168,8 @@ If you receive an expired-key error, ask your organization admin to generate a n
 
 The Raptor Comply API enforces rate limits to ensure reliable performance for all tenants. If you receive a `429 Too Many Requests` response, your integration must back off before retrying. Use **exponential backoff**: wait a base interval (for example, one second) after the first `429`, then double the wait time on each subsequent `429` received for the same request, up to a reasonable ceiling (for example, 60 seconds). Add a small random jitter to avoid synchronized retry storms if you run multiple workers.
 
-Do not simply loop and retry immediately — doing so will extend the period during which your requests are rate-limited.
+Do not simply loop and retry immediately. Doing so will extend the period during which your requests are rate-limited.
 
 <Tip>
-  For complete retry patterns, circuit-breaker strategies, and integration best practices — including code examples in Python, TypeScript, and Bash — see the [Error Handling Guide](/guides/error-handling).
+  For complete retry patterns, circuit-breaker strategies, and integration best practices, including code examples in Python, TypeScript, and Bash, see the [Error Handling Guide](/guides/error-handling).
 </Tip>

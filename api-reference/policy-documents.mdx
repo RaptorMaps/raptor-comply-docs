@@ -1,11 +1,11 @@
 ---
-title: "Policy Documents API — NERC CIP Document Lifecycle"
+title: "Policy Documents API: NERC CIP Document Lifecycle"
 description: "Manage NERC CIP policy documents, track versions, control approval workflows, and attach supporting assets via the Raptor Comply API. Coming soon."
 ---
 
 > Manage NERC CIP policy documents, track versions, control approval workflows, and attach supporting assets via the Raptor Comply API. Coming soon.
 
-Policy documents are the backbone of your NERC CIP compliance program. They represent the formal policies, procedures, and plans — such as your Physical Security Plan, Incident Response Plan, or BES Cyber System categorization procedures — that NERC requires registered entities to maintain, review, and keep current. Raptor Comply stores these documents with full lifecycle management: drafting, stakeholder review, formal approval, and audit-ready version history.
+Policy documents are the backbone of your NERC CIP compliance program. They represent the formal policies, procedures, and plans, such as your Physical Security Plan, Incident Response Plan, or BES Cyber System categorization procedures, that NERC requires registered entities to maintain, review, and keep current. Raptor Comply stores these documents with full lifecycle management: drafting, stakeholder review, formal approval, and audit-ready version history.
 
 When the Policy Documents API launches, you will be able to create and update documents programmatically, drive documents through the submit-and-approve workflow without touching the Raptor Comply UI, attach supporting assets, and pull version history directly into your own tooling or audit pipelines.
 
@@ -17,11 +17,10 @@ When the Policy Documents API launches, you will be able to create and update do
 
 ## Authentication
 
-Every request requires your API key and organization identifier as headers:
+Every request requires your API key as a header:
 
 ```http theme={null}
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 All requests are made against the base URL `https://api.raptormaps.com`.
@@ -32,10 +31,10 @@ All requests are made against the base URL `https://api.raptormaps.com`.
 
 Policy documents in Raptor Comply move through a defined set of states that mirror real-world compliance review processes:
 
-1. **Draft** — You create a document (via `POST /policy-documents`) or upload an existing file (via `POST /policy-documents/upload`). When uploading a file, Raptor Comply parses and extracts its content in the background; you can monitor progress with `GET /policy-documents/processing-files` and then call `POST /policy-documents/create-from-processed` to promote the parsed file into a full document record. The document is editable and not yet under review.
-2. **Submitted** — You call `POST /policy-documents/{id}/submit` to signal that the document is ready for approval. Editing is locked pending review.
-3. **Approved** — A designated approver calls `POST /policy-documents/{id}/approve`. Raptor Comply records the approval timestamp and approver identity and snapshots a new version.
-4. **Reverted** — If an approved document needs revision, you call `POST /policy-documents/{id}/revert` to return it to Draft status. A new edit-and-submit cycle begins.
+1. **Draft:** You create a document (via `POST /policy-documents`) or upload an existing file (via `POST /policy-documents/upload`). When uploading a file, Raptor Comply parses and extracts its content in the background; you can monitor progress with `GET /policy-documents/processing-files` and then call `POST /policy-documents/create-from-processed` to promote the parsed file into a full document record. The document is editable and not yet under review.
+2. **Submitted:** You call `POST /policy-documents/{id}/submit` to signal that the document is ready for approval. Editing is locked pending review.
+3. **Approved:** A designated approver calls `POST /policy-documents/{id}/approve`. Raptor Comply records the approval timestamp and approver identity and snapshots a new version.
+4. **Reverted:** If an approved document needs revision, you call `POST /policy-documents/{id}/revert` to return it to Draft status. A new edit-and-submit cycle begins.
 
 Each approval creates an immutable version snapshot, giving you a complete, timestamped chain of custody for NERC audits.
 
@@ -43,7 +42,7 @@ Each approval creates an immutable version snapshot, giving you a complete, time
 
 ## Versioning
 
-Every time a policy document is approved, Raptor Comply creates a new version record. You can list all historical versions, retrieve the latest approved version, or fetch any specific version by its number. This lets you compare what a document said at any point in time — critical when an auditor asks you to demonstrate what your policy said during a specific compliance period.
+Every time a policy document is approved, Raptor Comply creates a new version record. You can list all historical versions, retrieve the latest approved version, or fetch any specific version by its number. This lets you compare what a document said at any point in time. That is critical when an auditor asks you to demonstrate what your policy said during a specific compliance period.
 
 ***
 
@@ -96,10 +95,9 @@ Every time a policy document is approved, Raptor Comply creates a new version re
 POST /policy-documents
 Content-Type: application/json
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 
 {
-  "title": "Physical Security Plan — Substation Alpha",
+  "title": "Physical Security Plan: Substation Alpha",
   "documentTypeId": "dt_01hx3k9...",
   "ownerId": "usr_01hx2m7...",
   "reviewIntervalDays": 365,
@@ -112,7 +110,7 @@ X-Organization: <your-org-slug>
 ```json theme={null}
 {
   "id": "pd_01hx5r2...",
-  "title": "Physical Security Plan — Substation Alpha",
+  "title": "Physical Security Plan: Substation Alpha",
   "status": "draft",
   "documentTypeId": "dt_01hx3k9...",
   "ownerId": "usr_01hx2m7...",
@@ -129,7 +127,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 POST /policy-documents/pd_01hx5r2.../submit
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**
@@ -150,7 +147,6 @@ X-Organization: <your-org-slug>
 ```http theme={null}
 GET /policy-documents/pd_01hx5r2.../versions/latest
 X-API-Key: <your-api-key>
-X-Organization: <your-org-slug>
 ```
 
 **Response `200 OK`:**

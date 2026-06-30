@@ -1,14 +1,14 @@
 ---
-title: "Cyber Assets API — Full CRUD for Your Compliance Inventory"
+title: "Cyber Assets API: Full CRUD for Your Compliance Inventory"
 description: "Create, read, update, and delete NERC CIP cyber assets via the Raptor Comply API. Keep your CMDB in sync with your live compliance inventory."
 ---
 
 > Create, read, update, and delete NERC CIP cyber assets via the Raptor Comply API. Keep your CMDB in sync with your live compliance inventory.
 
-Cyber assets are the individual hardware and software components — RTUs, HMIs, servers, applications, and networking devices — that make up your BES Cyber Systems. Full create, read, update, and delete access is available today, making the `/cyber-assets` endpoints the primary integration surface for keeping your downstream CMDB synchronized with your live Raptor Comply compliance inventory.
+Cyber assets are the individual hardware and software components, such as RTUs, HMIs, servers, applications, and networking devices, that make up your BES Cyber Systems. Full create, read, update, and delete access is available today, making the `/cyber-assets` endpoints the primary integration surface for keeping your downstream CMDB synchronized with your live Raptor Comply compliance inventory.
 
 <Note>
-  Every request to the Raptor Comply API requires two headers: **X-API-Key** (your API key) and **Organization** (your organization slug). See [Authentication](/authentication) for setup instructions.
+  Every request to the Raptor Comply API authenticates with a single header: **X-API-Key** (your API key). The key is scoped to one organization, so no slug is needed. See [Authentication](/authentication) for setup instructions.
 </Note>
 
 ***
@@ -19,7 +19,7 @@ Cyber assets are the individual hardware and software components — RTUs, HMIs,
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-assets`
 
-Returns an array of all cyber assets belonging to your organization. Use this endpoint to load your full compliance inventory — for example, to diff it against your CMDB, feed a SIEM, or populate a reporting dashboard.
+Returns an array of all cyber assets belonging to your organization. Use this endpoint to load your full compliance inventory: for example, to diff it against your CMDB, feed a SIEM, or populate a reporting dashboard.
 
 #### Request
 
@@ -28,8 +28,7 @@ No path or query parameters are required. Include your authentication headers on
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/cyber-assets \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -53,7 +52,7 @@ Returns `200 OK` with a JSON array of cyber asset objects.
 </ResponseField>
 
 <ResponseField name="organization_slug" type="string">
-  The slug of the organization that owns this cyber asset. Matches the value you pass in the `Organization` header.
+  The slug of the organization this API key is scoped to.
 </ResponseField>
 
 ```json theme={null}
@@ -96,7 +95,6 @@ Creates a new cyber asset in your Raptor Comply compliance inventory. Use this e
 curl --request POST \
   --url https://api.raptormaps.com/cyber-assets \
   --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug' \
   --header 'Content-Type: application/json' \
   --data '{
     "name": "RTU-PLANT-01",
@@ -126,7 +124,7 @@ Returns `201 Created` with the newly created cyber asset object.
 </ResponseField>
 
 <ResponseField name="organization_slug" type="string">
-  The organization slug derived from your `Organization` header.
+  The slug of the organization this API key is scoped to.
 </ResponseField>
 
 ```json theme={null}
@@ -145,7 +143,7 @@ Returns `201 Created` with the newly created cyber asset object.
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-assets/{id}`
 
-Returns a single cyber asset by its unique identifier. Use this endpoint to fetch the current state of a specific asset — for example, to verify a record before updating it, or to resolve an asset ID received from a webhook or integration event.
+Returns a single cyber asset by its unique identifier. Use this endpoint to fetch the current state of a specific asset, for example to verify a record before updating it, or to resolve an asset ID received from a webhook or integration event.
 
 #### Path parameters
 
@@ -158,8 +156,7 @@ Returns a single cyber asset by its unique identifier. Use this endpoint to fetc
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/cyber-assets/ca_01GHI... \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -183,7 +180,7 @@ Returns `200 OK` with a single cyber asset object.
 </ResponseField>
 
 <ResponseField name="organization_slug" type="string">
-  The slug of the organization that owns this cyber asset.
+  The slug of the organization this API key is scoped to.
 </ResponseField>
 
 ```json theme={null}
@@ -202,7 +199,7 @@ Returns `200 OK` with a single cyber asset object.
 
 <span style={{ background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>PATCH</span> `/cyber-assets/{id}`
 
-Partially updates a cyber asset. Send only the fields you want to change — any fields you omit remain unchanged. Use this endpoint to reflect hardware replacements, hostname changes, reclassifications, or reassignments to a different BES Cyber System.
+Partially updates a cyber asset. Send only the fields you want to change. Any fields you omit remain unchanged. Use this endpoint to reflect hardware replacements, hostname changes, reclassifications, or reassignments to a different BES Cyber System.
 
 #### Path parameters
 
@@ -234,7 +231,6 @@ The example below renames an existing asset without touching any other fields.
 curl --request PATCH \
   --url https://api.raptormaps.com/cyber-assets/ca_01GHI... \
   --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug' \
   --header 'Content-Type: application/json' \
   --data '{
     "name": "RTU-PLANT-01-REPLACED"
@@ -278,8 +274,7 @@ Permanently removes a cyber asset from your Raptor Comply compliance inventory. 
 ```bash theme={null}
 curl --request DELETE \
   --url https://api.raptormaps.com/cyber-assets/ca_01GHI... \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -300,7 +295,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-assets/import/template`
 
-**Operation:** `getCyberAssetsImportTemplate` — Downloads a pre-formatted CSV template you can populate and submit to the bulk import endpoint.
+**Operation:** `getCyberAssetsImportTemplate`. Downloads a pre-formatted CSV template you can populate and submit to the bulk import endpoint.
 
 ***
 
@@ -308,7 +303,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/cyber-systems/{cyberSystemId}/cyber-assets`
 
-**Operation:** `getCyberAssetsBySystem` — Returns all cyber assets belonging to the specified BES Cyber System. Useful for scoped inventory queries without filtering the full asset list client-side.
+**Operation:** `getCyberAssetsBySystem`. Returns all cyber assets belonging to the specified BES Cyber System. Useful for scoped inventory queries without filtering the full asset list client-side.
 
 ***
 
@@ -316,7 +311,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/cyber-systems/{cyberSystemId}/cyber-assets/import`
 
-**Operation:** `importCyberAssets` — Bulk-creates cyber assets under the specified BES Cyber System from a CSV file. Use the `GET /cyber-assets/import/template` endpoint to obtain the correct CSV format before submitting.
+**Operation:** `importCyberAssets`. Bulk-creates cyber assets under the specified BES Cyber System from a CSV file. Use the `GET /cyber-assets/import/template` endpoint to obtain the correct CSV format before submitting.
 
 ***
 
@@ -324,7 +319,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/cyber-assets`
 
-**Operation:** `getCyberAssetsByFacility` — Returns all cyber assets associated with the specified facility, across all BES Cyber Systems at that site.
+**Operation:** `getCyberAssetsByFacility`. Returns all cyber assets associated with the specified facility, across all BES Cyber Systems at that site.
 
 ***
 
@@ -332,7 +327,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/cyber-assets/export`
 
-**Operation:** `exportCyberAssetsCsv` — Exports all high- and medium-impact cyber assets at the specified facility as a downloadable CSV file. Useful for offline compliance reporting or handoff to auditors.
+**Operation:** `exportCyberAssetsCsv`. Exports all high- and medium-impact cyber assets at the specified facility as a downloadable CSV file. Useful for offline compliance reporting or handoff to auditors.
 
 ***
 
@@ -340,7 +335,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/cyber-assets/export-low`
 
-**Operation:** `exportLowCyberAssetsCsv` — Exports all low-impact cyber assets at the specified facility as a downloadable CSV file. Use this alongside `exportCyberAssetsCsv` to produce a complete facility-level asset export separated by impact tier.
+**Operation:** `exportLowCyberAssetsCsv`. Exports all low-impact cyber assets at the specified facility as a downloadable CSV file. Use this alongside `exportCyberAssetsCsv` to produce a complete facility-level asset export separated by impact tier.
 
 ***
 
@@ -348,7 +343,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/cyber-assets`
 
-**Operation:** `getCyberAssetsByControlCenter` — Returns all cyber assets associated with the specified control center, across all BES Cyber Systems under that operational hub.
+**Operation:** `getCyberAssetsByControlCenter`. Returns all cyber assets associated with the specified control center, across all BES Cyber Systems under that operational hub.
 
 ***
 
@@ -356,7 +351,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/cyber-assets/export`
 
-**Operation:** `exportControlCenterCyberAssetsCsv` — Exports all high- and medium-impact cyber assets associated with the specified control center as a downloadable CSV file.
+**Operation:** `exportControlCenterCyberAssetsCsv`. Exports all high- and medium-impact cyber assets associated with the specified control center as a downloadable CSV file.
 
 ***
 
@@ -364,4 +359,4 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/cyber-assets/export-low`
 
-**Operation:** `exportControlCenterLowCyberAssetsCsv` — Exports all low-impact cyber assets associated with the specified control center as a downloadable CSV file. Use alongside `exportControlCenterCyberAssetsCsv` for a complete control-center-level asset export separated by impact tier.
+**Operation:** `exportControlCenterLowCyberAssetsCsv`. Exports all low-impact cyber assets associated with the specified control center as a downloadable CSV file. Use alongside `exportControlCenterCyberAssetsCsv` for a complete control-center-level asset export separated by impact tier.

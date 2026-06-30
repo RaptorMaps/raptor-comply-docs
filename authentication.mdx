@@ -1,16 +1,15 @@
 ---
-title: "Raptor Comply API Authentication: Headers and Keys"
-description: "Every Raptor Comply API request requires two headers: X-API-Key and Organization. Learn how to obtain, use, and rotate your API credentials."
+title: "Raptor Comply API Authentication: Header and Keys"
+description: "Every Raptor Comply API request authenticates with a single X-API-Key header. Learn how to obtain, use, and rotate your API credentials."
 ---
 
-> Every Raptor Comply API request requires two headers: X-API-Key and Organization. Learn how to obtain, use, and rotate your API credentials.
+> Every Raptor Comply API request authenticates with a single X-API-Key header. Learn how to obtain, use, and rotate your API credentials.
 
-Every request to the Raptor Comply API requires exactly two authentication headers: `X-API-Key` and `Organization`. Both must be present on every call — the API rejects requests that are missing either one. There are no cookies, no OAuth flows, and no session tokens; the two headers are the complete authentication model.
+Every request to the Raptor Comply API authenticates with a single header: `X-API-Key`. The key identifies your organization on its own, so there is no second header and nothing else to look up. The key is scoped to exactly one organization, and the API resolves every request against that organization. There are no cookies, no OAuth flows, and no session tokens; the one header is the complete authentication model.
 
-| Header         | Value                                | Source                                                                  |
-| -------------- | ------------------------------------ | ----------------------------------------------------------------------- |
-| `X-API-Key`    | Your API key, beginning with `rmcp_` | Generated inside Raptor Comply by an Organization Admin                 |
-| `Organization` | Your organization slug               | Set when your tenant was provisioned; visible in your Raptor Comply URL |
+| Header      | Value                                   | Source                                                  |
+| ----------- | --------------------------------------- | ------------------------------------------------------- |
+| `X-API-Key` | Your API key, beginning with `rc_live_` | Generated inside Raptor Comply by an Organization Admin |
 
 ## Getting an API key
 
@@ -18,25 +17,20 @@ API keys are issued from the **Settings page ([https://app.raptorcomply.com/sett
 
 If you don't yet have a key, ask your organization admin to generate one and deliver it to you through your team's standard secrets-handling process. Raptor Comply does not email keys or display them after initial generation, so treat the moment of creation as your one opportunity to capture it.
 
-## Passing the headers
+## Passing the header
 
-Include both headers on every request. Here is a complete example that lists your facilities:
+Include the `X-API-Key` header on every request. Here is a complete example that lists your facilities:
 
 ```bash theme={null}
 curl https://api.raptormaps.com/facilities \
-  -H "X-API-Key: rmcp_xxxxxxxxxxxxxxxxxxxxxxxx" \
-  -H "Organization: your-organization-slug"
+  -H "X-API-Key: rc_live_xxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-Replace `rmcp_xxxxxxxxxxxxxxxxxxxxxxxx` with your actual API key and `your-organization-slug` with your organization's slug. For real usage, store these values as environment variables rather than hardcoding them - see the [Quickstart](/quickstart) for a working example using env vars.
-
-## Finding your organization slug
-
-Your organization slug was set when your Raptor Comply tenant was provisioned. You can also find it in your Raptor Comply application URL - it is the identifier that appears in the URL path after you log in. If you're unsure of your slug, your Organization Admin can confirm it.
+Replace `rc_live_xxxxxxxxxxxxxxxxxxxxxxxx` with your actual API key. The key identifies your organization on its own, so no slug or second header is needed. For real usage, store the key as an environment variable rather than hardcoding it. See the [Quickstart](/quickstart) for a working example using env vars.
 
 ## Authentication errors
 
-All authentication failures return a JSON body with `error` and `message` fields. The four cases you may encounter are:
+All authentication failures return a JSON body with `error` and `message` fields. The three cases you may encounter are:
 
 <AccordionGroup>
   <Accordion title="401 - Missing X-API-Key header">
@@ -52,21 +46,8 @@ All authentication failures return a JSON body with `error` and `message` fields
     **Fix:** Add the `X-API-Key` header to your request.
   </Accordion>
 
-  <Accordion title="400 - Missing Organization header">
-    The request arrived without an `Organization` header.
-
-    ```json theme={null}
-    {
-      "error": "Bad Request",
-      "message": "Missing Organization header"
-    }
-    ```
-
-    **Fix:** Add the `Organization` header with your organization slug.
-  </Accordion>
-
   <Accordion title="401 - Invalid API key">
-    The `X-API-Key` value does not match any active key for the specified organization.
+    The `X-API-Key` value does not match any active key.
 
     ```json theme={null}
     {

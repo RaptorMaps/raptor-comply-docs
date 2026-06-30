@@ -1,14 +1,14 @@
 ---
-title: "Facilities API — List and Retrieve NERC Facilities"
+title: "Facilities API: List and Retrieve NERC Facilities"
 description: "Use GET /facilities and GET /facilities/{id} to list and retrieve your NERC-registered facilities. Create, update, and delete operations are coming soon."
 ---
 
 > Use GET /facilities and GET /facilities/{id} to list and retrieve your NERC-registered facilities. Create, update, and delete operations are coming soon.
 
-Facilities are the top-level structural objects in your Raptor Comply tenant. Each facility corresponds to a NERC-registered site — such as a substation, generating plant, or transmission station — that you've already classified inside the platform. Use these endpoints to read your facility inventory and integrate it into downstream tooling like CMDBs and asset management systems.
+Facilities are the top-level structural objects in your Raptor Comply tenant. Each facility corresponds to a NERC-registered site, such as a substation, generating plant, or transmission station, that you've already classified inside the platform. Use these endpoints to read your facility inventory and integrate it into downstream tooling like CMDBs and asset management systems.
 
 <Note>
-  Every request to the Raptor Comply API requires two headers: **X-API-Key** (your API key) and **Organization** (your organization slug). See [Authentication](/authentication) for setup instructions.
+  Every request to the Raptor Comply API authenticates with a single header: **X-API-Key** (your API key). The key is scoped to one organization, so no slug is needed. See [Authentication](/authentication) for setup instructions.
 </Note>
 
 ***
@@ -28,8 +28,7 @@ No path or query parameters are required. Include your authentication headers on
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/facilities \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -45,7 +44,7 @@ Returns `200 OK` with a JSON array of facility objects.
 </ResponseField>
 
 <ResponseField name="organization_slug" type="string">
-  The slug of the organization that owns this facility. Matches the value you pass in the `Organization` header.
+  The slug of the organization this API key is scoped to.
 </ResponseField>
 
 ```json theme={null}
@@ -64,7 +63,7 @@ Returns `200 OK` with a JSON array of facility objects.
 
 <span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{id}`
 
-Returns a single facility by its unique identifier. Use this endpoint when you need to look up or verify the details of a specific site — for example, after resolving a facility ID from a cyber system or cyber asset record.
+Returns a single facility by its unique identifier. Use this endpoint when you need to look up or verify the details of a specific site, for example after resolving a facility ID from a cyber system or cyber asset record.
 
 #### Path parameters
 
@@ -77,8 +76,7 @@ Returns a single facility by its unique identifier. Use this endpoint when you n
 ```bash theme={null}
 curl --request GET \
   --url https://api.raptormaps.com/facilities/fac_01HXY... \
-  --header 'X-API-Key: YOUR_API_KEY' \
-  --header 'Organization: your-org-slug'
+  --header 'X-API-Key: YOUR_API_KEY'
 ```
 
 #### Response
@@ -119,7 +117,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/facilities`
 
-**Operation:** `createFacility` — Creates a new facility in your Raptor Comply tenant.
+**Operation:** `createFacility`. Creates a new facility in your Raptor Comply tenant.
 
 ***
 
@@ -127,7 +125,7 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>PATCH</span> `/facilities/{id}`
 
-**Operation:** `updateFacility` — Partially updates the properties of an existing facility.
+**Operation:** `updateFacility`. Partially updates the properties of an existing facility.
 
 ***
 
@@ -135,4 +133,4 @@ The following endpoints exist in the Raptor Comply API but are not yet available
 
 <span style={{ background: '#ef4444', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>DELETE</span> `/facilities/{id}`
 
-**Operation:** `deleteFacility` — Permanently removes a facility from your Raptor Comply tenant.
+**Operation:** `deleteFacility`. Permanently removes a facility from your Raptor Comply tenant.
