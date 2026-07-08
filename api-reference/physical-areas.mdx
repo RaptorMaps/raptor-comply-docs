@@ -1,0 +1,283 @@
+---
+title: "Physical Areas API: Manage PSPs and Physical Areas"
+description: "Create, read, update, and delete physical areas, including Physical Security Perimeters (PSPs) and low-impact areas, and manage which cyber assets they contain."
+---
+
+> Create, read, update, and delete physical areas, including Physical Security Perimeters (PSPs) and low-impact areas, and manage which cyber assets they contain.
+
+Physical areas are named physical locations inside a facility or control center, such as a control room PSP or a low-impact substation yard, that group the cyber assets housed there. They anchor Raptor Comply's physical access control workflows: access requests are scoped to physical areas, and each area carries the list of cyber assets a grant would cover. Every area belongs to exactly one facility or one control center.
+
+<Note>
+  Every request to the Raptor Comply API authenticates with a single header: **X-API-Key** (your API key). The key is scoped to one organization, so no slug is needed. See [Authentication](/authentication) for setup instructions.
+</Note>
+
+***
+
+## Available endpoints
+
+### List physical areas for a facility
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/facilities/{facilityId}/physical-areas`
+
+Returns an array of all active physical areas scoped to a facility. Use this to enumerate the PSPs and low-impact areas at a site before creating or auditing access records.
+
+#### Path parameters
+
+<ParamField path="facilityId" type="string" required>
+  The unique identifier (UUID) of the facility. You can obtain this value from the `id` field returned by `GET /facilities`.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request GET \
+  --url https://api.raptormaps.com/facilities/1f4e9a2b-8c3d-4e5f-9a1b-2c3d4e5f6a7b/physical-areas \
+  --header 'X-API-Key: YOUR_API_KEY'
+```
+
+#### Response
+
+Returns `200 OK` with a JSON array of physical area objects. See [the physical area object](#the-physical-area-object) for field descriptions.
+
+```json theme={null}
+[
+  {
+    "id": "9b2f4c6e-1a3d-4f5b-8c7e-0d1a2b3c4d5e",
+    "name": "Control Room PSP",
+    "description": "Main control room physical security perimeter",
+    "facilityId": "1f4e9a2b-8c3d-4e5f-9a1b-2c3d4e5f6a7b",
+    "controlCenterId": null,
+    "regulatoryType": "PSP",
+    "cyberAssets": [
+      {
+        "id": "5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+        "assetTitle": "Historian Server 01",
+        "assetTag": "HIST-01"
+      }
+    ],
+    "createdAt": "2026-05-12T14:03:22.000Z",
+    "updatedAt": "2026-06-01T09:41:05.000Z"
+  }
+]
+```
+
+***
+
+### List physical areas for a control center
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/control-centers/{controlCenterId}/physical-areas`
+
+Returns an array of all active physical areas scoped to a control center.
+
+#### Path parameters
+
+<ParamField path="controlCenterId" type="string" required>
+  The unique identifier (UUID) of the control center. You can obtain this value from the `id` field returned by `GET /control-centers`.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request GET \
+  --url https://api.raptormaps.com/control-centers/7c8d9e0f-1a2b-3c4d-5e6f-7a8b9c0d1e2f/physical-areas \
+  --header 'X-API-Key: YOUR_API_KEY'
+```
+
+#### Response
+
+Returns `200 OK` with a JSON array of physical area objects, in the same shape as the facility listing above.
+
+***
+
+### Create a physical area
+
+<span style={{ background: '#3b82f6', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>POST</span> `/physical-areas`
+
+Creates a new physical area scoped to exactly one facility or one control center, with an initial set of member cyber assets.
+
+#### Body parameters
+
+<ParamField body="name" type="string" required>
+  Name of the physical area, 1 to 255 characters. Must be unique within its facility or control center.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Optional description, up to 255 characters.
+</ParamField>
+
+<ParamField body="facilityId" type="string">
+  UUID of the facility this area belongs to. Provide exactly one of `facilityId` or `controlCenterId`, never both.
+</ParamField>
+
+<ParamField body="controlCenterId" type="string">
+  UUID of the control center this area belongs to. Provide exactly one of `facilityId` or `controlCenterId`, never both.
+</ParamField>
+
+<ParamField body="cyberAssetIds" type="string[]" required>
+  UUIDs of the cyber assets contained in this area. Every asset must belong to the same facility or control center as the area. Pass an empty array to create an area with no assets yet.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request POST \
+  --url https://api.raptormaps.com/physical-areas \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Control Room PSP",
+    "description": "Main control room physical security perimeter",
+    "facilityId": "1f4e9a2b-8c3d-4e5f-9a1b-2c3d4e5f6a7b",
+    "cyberAssetIds": ["5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b"]
+  }'
+```
+
+#### Response
+
+Returns `201 Created` with the new physical area object. Returns `400` if the location rule is violated (both or neither of `facilityId`/`controlCenterId`, or an asset outside the target location) and `409` if the name already exists within the facility or control center.
+
+***
+
+### Get a single physical area
+
+<span style={{ background: '#22c55e', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>GET</span> `/physical-areas/{id}`
+
+Returns a single physical area by its unique identifier, including its current linked cyber assets.
+
+#### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier (UUID) of the physical area.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request GET \
+  --url https://api.raptormaps.com/physical-areas/9b2f4c6e-1a3d-4f5b-8c7e-0d1a2b3c4d5e \
+  --header 'X-API-Key: YOUR_API_KEY'
+```
+
+#### Response
+
+Returns `200 OK` with a single physical area object, or `404` if no active area matches the identifier.
+
+***
+
+### Update a physical area
+
+<span style={{ background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>PUT</span> `/physical-areas/{id}`
+
+Updates an area's name, description, and asset membership. The `cyberAssetIds` array is the full replacement membership list, not a delta: assets omitted from the array are removed from the area. Updating an area does not modify existing access requests, which keep their frozen snapshot.
+
+#### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier (UUID) of the physical area.
+</ParamField>
+
+#### Body parameters
+
+<ParamField body="name" type="string">
+  New name, 1 to 255 characters. Must remain unique within the facility or control center.
+</ParamField>
+
+<ParamField body="description" type="string">
+  New description, up to 255 characters. Pass `null` to clear it.
+</ParamField>
+
+<ParamField body="cyberAssetIds" type="string[]" required>
+  The complete list of cyber asset UUIDs that should belong to the area after the update.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request PUT \
+  --url https://api.raptormaps.com/physical-areas/9b2f4c6e-1a3d-4f5b-8c7e-0d1a2b3c4d5e \
+  --header 'X-API-Key: YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Control Room PSP",
+    "cyberAssetIds": [
+      "5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+      "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d"
+    ]
+  }'
+```
+
+#### Response
+
+Returns `200 OK` with the updated physical area object. Returns `400` if an asset is outside the area's location, `404` if the area does not exist, and `409` on a name collision.
+
+***
+
+### Delete a physical area
+
+<span style={{ background: '#ef4444', color: '#fff', borderRadius: '4px', padding: '2px 8px', fontWeight: 700, fontSize: '0.8rem', marginRight: '8px' }}>DELETE</span> `/physical-areas/{id}`
+
+Soft-deletes a physical area and removes its cyber asset links. Existing access requests that reference the area keep their frozen snapshot.
+
+#### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier (UUID) of the physical area.
+</ParamField>
+
+#### Request
+
+```bash theme={null}
+curl --request DELETE \
+  --url https://api.raptormaps.com/physical-areas/9b2f4c6e-1a3d-4f5b-8c7e-0d1a2b3c4d5e \
+  --header 'X-API-Key: YOUR_API_KEY'
+```
+
+#### Response
+
+Returns `200 OK` with a confirmation message.
+
+```json theme={null}
+{
+  "message": "Physical area deleted"
+}
+```
+
+***
+
+## The physical area object
+
+<ResponseField name="id" type="string">
+  Unique identifier (UUID) for the physical area.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Name of the area, unique within its facility or control center.
+</ResponseField>
+
+<ResponseField name="description" type="string | null">
+  Optional description of the area.
+</ResponseField>
+
+<ResponseField name="facilityId" type="string | null">
+  UUID of the owning facility. Exactly one of `facilityId` or `controlCenterId` is set.
+</ResponseField>
+
+<ResponseField name="controlCenterId" type="string | null">
+  UUID of the owning control center. Exactly one of `facilityId` or `controlCenterId` is set.
+</ResponseField>
+
+<ResponseField name="regulatoryType" type="string | null">
+  Regulatory classification of the area: `PSP`, `LowImpactArea`, or `Unregulated`.
+</ResponseField>
+
+<ResponseField name="cyberAssets" type="object[]">
+  The cyber assets currently contained in the area. Each entry carries `id`, `assetTitle`, and `assetTag`. Use the [Cyber Assets API](/api-reference/cyber-assets) for full asset details.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  ISO 8601 timestamp of when the area was created.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string">
+  ISO 8601 timestamp of the last update.
+</ResponseField>

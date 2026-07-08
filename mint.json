@@ -59,6 +59,7 @@
         "api-reference/control-centers",
         "api-reference/cyber-systems",
         "api-reference/cyber-assets",
+        "api-reference/physical-areas",
         "api-reference/access-control",
         "api-reference/policy-documents",
         "api-reference/evidence",
