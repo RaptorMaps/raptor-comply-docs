@@ -39,7 +39,7 @@ Not all errors are worth retrying. Follow this rule:
 * **Retryable:** `429 Too Many Requests` and `5xx` server errors. These are transient conditions - the request itself is valid, and retrying after a delay will often succeed.
 * **Not retryable:** `4xx` errors (except `429`). These indicate a problem with the request - a missing header, a wrong ID, a malformed body. Retrying without fixing the underlying issue will not help.
 
-For retryable errors, use **exponential backoff with jitter** to avoid hammering the API and making rate-limit situations worse. A good starting point: wait 1 second before the first retry, double the wait on each subsequent attempt, add random jitter, and give up after 3–5 attempts.
+For retryable errors, use **exponential backoff with jitter** to avoid hammering the API and making rate-limit situations worse. A good starting point: wait 1 second before the first retry, double the wait on each subsequent attempt, add random jitter, and give up after 3 to 5 attempts.
 
 Here is a Node.js helper that wraps any API call with that pattern:
 
