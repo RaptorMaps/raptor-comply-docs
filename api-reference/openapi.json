@@ -554,7 +554,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "type": "string"
                 }
@@ -687,7 +687,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "type": "string"
                 }
@@ -4102,10 +4102,23 @@
         "requestBody": {
           "content": {
             "multipart/form-data": {
-              "schema": {}
+              "schema": {
+                "properties": {
+                  "file": {
+                    "description": "The cyber asset import file. Accepted content types: text/csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet. Maximum size 10 MB. Use GET /cyber-assets/import/template for the expected column layout.",
+                    "format": "binary",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "type": "object"
+              }
             }
           },
-          "description": "Body"
+          "description": "Multipart upload of a single CSV or spreadsheet file. Maximum size 10 MB.",
+          "required": true
         },
         "responses": {
           "200": {
@@ -5198,7 +5211,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "type": "string"
                 }
@@ -5331,7 +5344,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "type": "string"
                 }
