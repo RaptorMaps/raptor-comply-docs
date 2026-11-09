@@ -15,6 +15,318 @@
   },
   "openapi": "3.0.2",
   "paths": {
+    "/baseline-configurations/{baselineConfigurationId}": {
+      "get": {
+        "operationId": "getBaselineConfiguration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "baselineConfigurationId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "assetCount": {
+                      "type": "integer"
+                    },
+                    "assignments": {
+                      "items": {
+                        "properties": {
+                          "cyberAssetId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "status": {
+                            "enum": [
+                              "updated",
+                              "need_to_update"
+                            ],
+                            "type": "string"
+                          },
+                          "verifiedVersion": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "cyberAssetId",
+                          "verifiedVersion",
+                          "status"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "content": {
+                      "properties": {
+                        "digitalObjects": {
+                          "items": {
+                            "properties": {
+                              "description": {
+                                "type": "string"
+                              },
+                              "digitalObjectId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "manufacturer": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "softwareClassification": {
+                                "enum": [
+                                  "commercially_available",
+                                  "custom_developed"
+                                ],
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "os",
+                                  "firmware",
+                                  "software",
+                                  "security_patch"
+                                ],
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "digitalObjectId",
+                              "type",
+                              "name",
+                              "manufacturer",
+                              "version"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ports": {
+                          "items": {
+                            "properties": {
+                              "port": {
+                                "type": "string"
+                              },
+                              "protocol": {
+                                "enum": [
+                                  "tcp",
+                                  "udp"
+                                ],
+                                "type": "string"
+                              },
+                              "purpose": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "port",
+                              "protocol",
+                              "purpose"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "digitalObjects",
+                        "ports"
+                      ],
+                      "type": "object"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "createdBy": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "currentVersion": {
+                      "type": "integer"
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "locationId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "locationType": {
+                      "enum": [
+                        "facility",
+                        "control_center"
+                      ],
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "os",
+                        "firmware"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "type",
+                    "locationType",
+                    "locationId",
+                    "currentVersion",
+                    "content",
+                    "assetCount",
+                    "assignments",
+                    "createdAt",
+                    "createdBy"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
     "/control-centers": {
       "get": {
         "operationId": "getControlCenters",
@@ -243,6 +555,313 @@
               }
             },
             "description": "401"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
+    "/control-centers/{controlCenterId}/baseline-configurations": {
+      "get": {
+        "operationId": "listControlCenterBaselineConfigurations",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "controlCenterId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "configurations": {
+                      "items": {
+                        "properties": {
+                          "assetCount": {
+                            "type": "integer"
+                          },
+                          "assignments": {
+                            "items": {
+                              "properties": {
+                                "cyberAssetId": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "enum": [
+                                    "updated",
+                                    "need_to_update"
+                                  ],
+                                  "type": "string"
+                                },
+                                "verifiedVersion": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "cyberAssetId",
+                                "verifiedVersion",
+                                "status"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "content": {
+                            "properties": {
+                              "digitalObjects": {
+                                "items": {
+                                  "properties": {
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "digitalObjectId": {
+                                      "format": "uuid",
+                                      "type": "string"
+                                    },
+                                    "manufacturer": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "softwareClassification": {
+                                      "enum": [
+                                        "commercially_available",
+                                        "custom_developed"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "enum": [
+                                        "os",
+                                        "firmware",
+                                        "software",
+                                        "security_patch"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "version": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "digitalObjectId",
+                                    "type",
+                                    "name",
+                                    "manufacturer",
+                                    "version"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "ports": {
+                                "items": {
+                                  "properties": {
+                                    "port": {
+                                      "type": "string"
+                                    },
+                                    "protocol": {
+                                      "enum": [
+                                        "tcp",
+                                        "udp"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "purpose": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "port",
+                                    "protocol",
+                                    "purpose"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              }
+                            },
+                            "required": [
+                              "digitalObjects",
+                              "ports"
+                            ],
+                            "type": "object"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "currentVersion": {
+                            "type": "integer"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "locationId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "locationType": {
+                            "enum": [
+                              "facility",
+                              "control_center"
+                            ],
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "type",
+                          "locationType",
+                          "locationId",
+                          "currentVersion",
+                          "content",
+                          "assetCount",
+                          "assignments",
+                          "createdAt",
+                          "createdBy"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "unassignedCyberAssetIds": {
+                      "items": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "configurations",
+                    "unassignedCyberAssetIds"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
           },
           "500": {
             "content": {
@@ -5470,6 +6089,313 @@
                 "schema": {
                   "properties": {
                     "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
+    "/facilities/{facilityId}/baseline-configurations": {
+      "get": {
+        "operationId": "listFacilityBaselineConfigurations",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "facilityId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "configurations": {
+                      "items": {
+                        "properties": {
+                          "assetCount": {
+                            "type": "integer"
+                          },
+                          "assignments": {
+                            "items": {
+                              "properties": {
+                                "cyberAssetId": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "enum": [
+                                    "updated",
+                                    "need_to_update"
+                                  ],
+                                  "type": "string"
+                                },
+                                "verifiedVersion": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "cyberAssetId",
+                                "verifiedVersion",
+                                "status"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "content": {
+                            "properties": {
+                              "digitalObjects": {
+                                "items": {
+                                  "properties": {
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "digitalObjectId": {
+                                      "format": "uuid",
+                                      "type": "string"
+                                    },
+                                    "manufacturer": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "softwareClassification": {
+                                      "enum": [
+                                        "commercially_available",
+                                        "custom_developed"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "enum": [
+                                        "os",
+                                        "firmware",
+                                        "software",
+                                        "security_patch"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "version": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "digitalObjectId",
+                                    "type",
+                                    "name",
+                                    "manufacturer",
+                                    "version"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "ports": {
+                                "items": {
+                                  "properties": {
+                                    "port": {
+                                      "type": "string"
+                                    },
+                                    "protocol": {
+                                      "enum": [
+                                        "tcp",
+                                        "udp"
+                                      ],
+                                      "type": "string"
+                                    },
+                                    "purpose": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "port",
+                                    "protocol",
+                                    "purpose"
+                                  ],
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              }
+                            },
+                            "required": [
+                              "digitalObjects",
+                              "ports"
+                            ],
+                            "type": "object"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "createdBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "currentVersion": {
+                            "type": "integer"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "locationId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "locationType": {
+                            "enum": [
+                              "facility",
+                              "control_center"
+                            ],
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "type",
+                          "locationType",
+                          "locationId",
+                          "currentVersion",
+                          "content",
+                          "assetCount",
+                          "assignments",
+                          "createdAt",
+                          "createdBy"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "unassignedCyberAssetIds": {
+                      "items": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "configurations",
+                    "unassignedCyberAssetIds"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
                       "type": "string"
                     },
                     "message": {
