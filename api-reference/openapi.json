@@ -1414,6 +1414,471 @@
         "tags": []
       }
     },
+    "/control-centers/{controlCenterId}/cyber-assets/{cyberAssetId}/configuration": {
+      "get": {
+        "operationId": "getControlCenterCyberAssetConfiguration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "controlCenterId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "baseline": {
+                      "nullable": true,
+                      "properties": {
+                        "currentVersion": {
+                          "type": "integer"
+                        },
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "currentVersion"
+                      ],
+                      "type": "object"
+                    },
+                    "current": {
+                      "properties": {
+                        "digitalObjects": {
+                          "items": {
+                            "properties": {
+                              "description": {
+                                "type": "string"
+                              },
+                              "digitalObjectId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "manufacturer": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "softwareClassification": {
+                                "enum": [
+                                  "commercially_available",
+                                  "custom_developed"
+                                ],
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "os",
+                                  "firmware",
+                                  "software",
+                                  "security_patch"
+                                ],
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "digitalObjectId",
+                              "type",
+                              "name",
+                              "manufacturer",
+                              "version"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ports": {
+                          "items": {
+                            "properties": {
+                              "port": {
+                                "type": "string"
+                              },
+                              "protocol": {
+                                "enum": [
+                                  "tcp",
+                                  "udp"
+                                ],
+                                "type": "string"
+                              },
+                              "purpose": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "port",
+                              "protocol",
+                              "purpose"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "digitalObjects",
+                        "ports"
+                      ],
+                      "type": "object"
+                    },
+                    "own": {
+                      "properties": {
+                        "digitalObjects": {
+                          "items": {
+                            "properties": {
+                              "addedAt": {
+                                "type": "string"
+                              },
+                              "addedBy": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "addedByApiKeyId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "digitalObjectId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "manufacturer": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "softwareClassification": {
+                                "enum": [
+                                  "commercially_available",
+                                  "custom_developed"
+                                ],
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "os",
+                                  "firmware",
+                                  "software",
+                                  "security_patch"
+                                ],
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "digitalObjectId",
+                              "type",
+                              "name",
+                              "manufacturer",
+                              "version",
+                              "addedAt"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ports": {
+                          "items": {
+                            "properties": {
+                              "addedAt": {
+                                "type": "string"
+                              },
+                              "addedBy": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "addedByApiKeyId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "port": {
+                                "type": "string"
+                              },
+                              "protocol": {
+                                "enum": [
+                                  "tcp",
+                                  "udp"
+                                ],
+                                "type": "string"
+                              },
+                              "purpose": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "port",
+                              "protocol",
+                              "purpose",
+                              "addedAt"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "digitalObjects",
+                        "ports"
+                      ],
+                      "type": "object"
+                    },
+                    "pending": {
+                      "items": {
+                        "properties": {
+                          "afterDigitalObjectId": {
+                            "format": "uuid",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "afterValue": {
+                            "additionalProperties": {
+                              "nullable": true
+                            },
+                            "nullable": true,
+                            "type": "object"
+                          },
+                          "beforeDigitalObjectId": {
+                            "format": "uuid",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "beforeValue": {
+                            "additionalProperties": {
+                              "nullable": true
+                            },
+                            "nullable": true,
+                            "type": "object"
+                          },
+                          "changeType": {
+                            "enum": [
+                              "security_patch_applied",
+                              "security_patch_removed",
+                              "software_added",
+                              "software_upgraded",
+                              "software_removed",
+                              "os_added",
+                              "os_upgraded",
+                              "os_removed",
+                              "firmware_added",
+                              "firmware_upgraded",
+                              "firmware_removed",
+                              "logical_port_added",
+                              "logical_port_modified",
+                              "logical_port_removed",
+                              "other_configuration_change"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "changeType",
+                          "beforeValue",
+                          "afterValue",
+                          "beforeDigitalObjectId",
+                          "afterDigitalObjectId"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "enum": [
+                        "updated",
+                        "need_to_update"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "suggestedChangedOn": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "verifiedVersion": {
+                      "nullable": true,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "baseline",
+                    "verifiedVersion",
+                    "status",
+                    "current",
+                    "pending",
+                    "own",
+                    "suggestedChangedOn"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
     "/control-centers/{controlCenterId}/cyber-systems": {
       "get": {
         "operationId": "getCyberSystemsByControlCenter",
@@ -3420,6 +3885,1908 @@
               }
             },
             "description": "200"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
+    "/cyber-assets/{cyberAssetId}/digital-objects": {
+      "post": {
+        "operationId": "addCyberAssetDigitalObject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "digitalObjectId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "digitalObjectId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "digitalObjects": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "digitalObjectId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "manufacturer": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "softwareClassification": {
+                            "enum": [
+                              "commercially_available",
+                              "custom_developed"
+                            ],
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware",
+                              "software",
+                              "security_patch"
+                            ],
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "digitalObjectId",
+                          "type",
+                          "name",
+                          "manufacturer",
+                          "version",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "ports": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "port": {
+                            "type": "string"
+                          },
+                          "protocol": {
+                            "enum": [
+                              "tcp",
+                              "udp"
+                            ],
+                            "type": "string"
+                          },
+                          "purpose": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "port",
+                          "protocol",
+                          "purpose",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "digitalObjects",
+                    "ports"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "201"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "409"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
+    "/cyber-assets/{cyberAssetId}/digital-objects/{digitalObjectId}": {
+      "delete": {
+        "operationId": "removeCyberAssetDigitalObject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "digitalObjectId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "type": "object"
+              }
+            }
+          },
+          "description": "Body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "digitalObjects": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "digitalObjectId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "manufacturer": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "softwareClassification": {
+                            "enum": [
+                              "commercially_available",
+                              "custom_developed"
+                            ],
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware",
+                              "software",
+                              "security_patch"
+                            ],
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "digitalObjectId",
+                          "type",
+                          "name",
+                          "manufacturer",
+                          "version",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "ports": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "port": {
+                            "type": "string"
+                          },
+                          "protocol": {
+                            "enum": [
+                              "tcp",
+                              "udp"
+                            ],
+                            "type": "string"
+                          },
+                          "purpose": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "port",
+                          "protocol",
+                          "purpose",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "digitalObjects",
+                    "ports"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "409"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      },
+      "put": {
+        "operationId": "swapCyberAssetDigitalObject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "digitalObjectId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "digitalObjectId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "digitalObjectId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "digitalObjects": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "digitalObjectId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "manufacturer": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "softwareClassification": {
+                            "enum": [
+                              "commercially_available",
+                              "custom_developed"
+                            ],
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware",
+                              "software",
+                              "security_patch"
+                            ],
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "digitalObjectId",
+                          "type",
+                          "name",
+                          "manufacturer",
+                          "version",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "ports": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "port": {
+                            "type": "string"
+                          },
+                          "protocol": {
+                            "enum": [
+                              "tcp",
+                              "udp"
+                            ],
+                            "type": "string"
+                          },
+                          "purpose": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "port",
+                          "protocol",
+                          "purpose",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "digitalObjects",
+                    "ports"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "409"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
+    "/cyber-assets/{cyberAssetId}/ports": {
+      "post": {
+        "operationId": "addCyberAssetPort",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "port": {
+                    "type": "string"
+                  },
+                  "protocol": {
+                    "enum": [
+                      "tcp",
+                      "udp"
+                    ],
+                    "type": "string"
+                  },
+                  "purpose": {
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "port",
+                  "protocol"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "digitalObjects": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "digitalObjectId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "manufacturer": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "softwareClassification": {
+                            "enum": [
+                              "commercially_available",
+                              "custom_developed"
+                            ],
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware",
+                              "software",
+                              "security_patch"
+                            ],
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "digitalObjectId",
+                          "type",
+                          "name",
+                          "manufacturer",
+                          "version",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "ports": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "port": {
+                            "type": "string"
+                          },
+                          "protocol": {
+                            "enum": [
+                              "tcp",
+                              "udp"
+                            ],
+                            "type": "string"
+                          },
+                          "purpose": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "port",
+                          "protocol",
+                          "purpose",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "digitalObjects",
+                    "ports"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "201"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "409"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
+    "/cyber-assets/{cyberAssetId}/ports/{protocol}/{port}": {
+      "delete": {
+        "operationId": "removeCyberAssetPort",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "protocol",
+            "required": true,
+            "schema": {
+              "enum": [
+                "tcp",
+                "udp"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "port",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "type": "object"
+              }
+            }
+          },
+          "description": "Body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "digitalObjects": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "digitalObjectId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "manufacturer": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "softwareClassification": {
+                            "enum": [
+                              "commercially_available",
+                              "custom_developed"
+                            ],
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware",
+                              "software",
+                              "security_patch"
+                            ],
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "digitalObjectId",
+                          "type",
+                          "name",
+                          "manufacturer",
+                          "version",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "ports": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "port": {
+                            "type": "string"
+                          },
+                          "protocol": {
+                            "enum": [
+                              "tcp",
+                              "udp"
+                            ],
+                            "type": "string"
+                          },
+                          "purpose": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "port",
+                          "protocol",
+                          "purpose",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "digitalObjects",
+                    "ports"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "409"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      },
+      "put": {
+        "operationId": "editCyberAssetPort",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "protocol",
+            "required": true,
+            "schema": {
+              "enum": [
+                "tcp",
+                "udp"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "port",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "port": {
+                    "type": "string"
+                  },
+                  "protocol": {
+                    "enum": [
+                      "tcp",
+                      "udp"
+                    ],
+                    "type": "string"
+                  },
+                  "purpose": {
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "port",
+                  "protocol"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "digitalObjects": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "digitalObjectId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "manufacturer": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "softwareClassification": {
+                            "enum": [
+                              "commercially_available",
+                              "custom_developed"
+                            ],
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "os",
+                              "firmware",
+                              "software",
+                              "security_patch"
+                            ],
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "digitalObjectId",
+                          "type",
+                          "name",
+                          "manufacturer",
+                          "version",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "ports": {
+                      "items": {
+                        "properties": {
+                          "addedAt": {
+                            "type": "string"
+                          },
+                          "addedBy": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "addedByApiKeyId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "port": {
+                            "type": "string"
+                          },
+                          "protocol": {
+                            "enum": [
+                              "tcp",
+                              "udp"
+                            ],
+                            "type": "string"
+                          },
+                          "purpose": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "port",
+                          "protocol",
+                          "purpose",
+                          "addedAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "digitalObjects",
+                    "ports"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "409"
           },
           "500": {
             "content": {
@@ -5594,6 +7961,7 @@
                     "additionalProperties": false,
                     "properties": {
                       "description": {
+                        "nullable": true,
                         "type": "string"
                       },
                       "manufacturer": {
@@ -6909,6 +9277,471 @@
               }
             },
             "description": "401"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "404"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "500"
+          }
+        },
+        "tags": []
+      }
+    },
+    "/facilities/{facilityId}/cyber-assets/{cyberAssetId}/configuration": {
+      "get": {
+        "operationId": "getFacilityCyberAssetConfiguration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "facilityId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "cyberAssetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "baseline": {
+                      "nullable": true,
+                      "properties": {
+                        "currentVersion": {
+                          "type": "integer"
+                        },
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "currentVersion"
+                      ],
+                      "type": "object"
+                    },
+                    "current": {
+                      "properties": {
+                        "digitalObjects": {
+                          "items": {
+                            "properties": {
+                              "description": {
+                                "type": "string"
+                              },
+                              "digitalObjectId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "manufacturer": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "softwareClassification": {
+                                "enum": [
+                                  "commercially_available",
+                                  "custom_developed"
+                                ],
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "os",
+                                  "firmware",
+                                  "software",
+                                  "security_patch"
+                                ],
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "digitalObjectId",
+                              "type",
+                              "name",
+                              "manufacturer",
+                              "version"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ports": {
+                          "items": {
+                            "properties": {
+                              "port": {
+                                "type": "string"
+                              },
+                              "protocol": {
+                                "enum": [
+                                  "tcp",
+                                  "udp"
+                                ],
+                                "type": "string"
+                              },
+                              "purpose": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "port",
+                              "protocol",
+                              "purpose"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "digitalObjects",
+                        "ports"
+                      ],
+                      "type": "object"
+                    },
+                    "own": {
+                      "properties": {
+                        "digitalObjects": {
+                          "items": {
+                            "properties": {
+                              "addedAt": {
+                                "type": "string"
+                              },
+                              "addedBy": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "addedByApiKeyId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "digitalObjectId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "manufacturer": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "softwareClassification": {
+                                "enum": [
+                                  "commercially_available",
+                                  "custom_developed"
+                                ],
+                                "type": "string"
+                              },
+                              "type": {
+                                "enum": [
+                                  "os",
+                                  "firmware",
+                                  "software",
+                                  "security_patch"
+                                ],
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "digitalObjectId",
+                              "type",
+                              "name",
+                              "manufacturer",
+                              "version",
+                              "addedAt"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "ports": {
+                          "items": {
+                            "properties": {
+                              "addedAt": {
+                                "type": "string"
+                              },
+                              "addedBy": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "addedByApiKeyId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "port": {
+                                "type": "string"
+                              },
+                              "protocol": {
+                                "enum": [
+                                  "tcp",
+                                  "udp"
+                                ],
+                                "type": "string"
+                              },
+                              "purpose": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "port",
+                              "protocol",
+                              "purpose",
+                              "addedAt"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "digitalObjects",
+                        "ports"
+                      ],
+                      "type": "object"
+                    },
+                    "pending": {
+                      "items": {
+                        "properties": {
+                          "afterDigitalObjectId": {
+                            "format": "uuid",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "afterValue": {
+                            "additionalProperties": {
+                              "nullable": true
+                            },
+                            "nullable": true,
+                            "type": "object"
+                          },
+                          "beforeDigitalObjectId": {
+                            "format": "uuid",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "beforeValue": {
+                            "additionalProperties": {
+                              "nullable": true
+                            },
+                            "nullable": true,
+                            "type": "object"
+                          },
+                          "changeType": {
+                            "enum": [
+                              "security_patch_applied",
+                              "security_patch_removed",
+                              "software_added",
+                              "software_upgraded",
+                              "software_removed",
+                              "os_added",
+                              "os_upgraded",
+                              "os_removed",
+                              "firmware_added",
+                              "firmware_upgraded",
+                              "firmware_removed",
+                              "logical_port_added",
+                              "logical_port_modified",
+                              "logical_port_removed",
+                              "other_configuration_change"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "changeType",
+                          "beforeValue",
+                          "afterValue",
+                          "beforeDigitalObjectId",
+                          "afterDigitalObjectId"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "enum": [
+                        "updated",
+                        "need_to_update"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "suggestedChangedOn": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "verifiedVersion": {
+                      "nullable": true,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "baseline",
+                    "verifiedVersion",
+                    "status",
+                    "current",
+                    "pending",
+                    "own",
+                    "suggestedChangedOn"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "200"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "403"
           },
           "404": {
             "content": {
